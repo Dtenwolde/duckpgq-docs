@@ -42,7 +42,6 @@ CREATE PROPERTY GRAPH snb
 ```
 The table `Person_knows_person` is given the label `Knows` as a shorthand for future queries.
 
-</aside>
 
 Now, we can write SQL/PGQ `MATCH` queries using the visual graph syntax:
 
