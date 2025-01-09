@@ -9,7 +9,7 @@ The tables will be divided into vertex tables and edge tables, having a primary 
 To create a property graph the syntax is as follows: 
 
 ```sql
-CREATE [ OR REPLACE ] PROPERTY GRAPH (<property_graph_name> 
+CREATE [ OR REPLACE ] PROPERTY GRAPH (<property graph name> 
 VERTEX TABLES (
 	<vertex table>
 [, <vertex table> ]
@@ -35,7 +35,7 @@ EDGE TABLES (
   Forum_hasMember_Person  SOURCE KEY (ForumId) REFERENCES Forum (id)
                           DESTINATION KEY (PersonId) REFERENCES Person (id)
                           LABEL hasMember,
-	Person_likes_Message    SOURCE KEY (PersonId) REFERENCES Person (id)
+  Person_likes_Message    SOURCE KEY (PersonId) REFERENCES Person (id)
                           DESTINATION KEY (id) REFERENCES Message (id)
                           LABEL likes_Message
 );
@@ -158,6 +158,7 @@ Consider a table called `Organisation` that can represent different types of org
 | 7677 | University | University_of_Arkansas_Graduate_School | 2 |
 | 5103 | University | Villahermosa_Institute_of_Technology | 2 |
 | 231 | Company | Kivalliq_Air | 1 |
+
 - **Table Name:** `Organisation`
 - **Special Column:** `typemask` - This column indicates the type of organization. It can take values such as `company` and `university`.
 - **Primary Key:** `OrganisationID` - This uniquely identifies each organization in the table.
