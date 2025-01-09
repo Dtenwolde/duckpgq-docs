@@ -216,7 +216,7 @@ FROM GRAPH_TABLE (snb
     MATCH (p:Person)-[k:knows]->(p2:Person)
     COLUMNS (p.id, p2.id)
     )
-    limit 1;
+LIMIT 1;
 ```
 
 ```sql
