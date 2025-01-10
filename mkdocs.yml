@@ -1,1 +1,36 @@
 site_name: DuckPGQ Documentation
+
+markdown_extensions:
+
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+
+theme:
+  name: material
+  custom_dir: overrides
+  features:
+    - content.code.copy
+    - content.code.select
+  icon:
+    repo: fontawesome/brands/github
+repo_url: https://github.com/cwida/duckpgq-extension
+repo_name: DuckPGQ
+
+extra:
+  social:
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/8X95XHhQB7
+
+extra_javascript:
+  - https://kit.fontawesome.com/a076d05399.js
+

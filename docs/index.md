@@ -3,7 +3,24 @@ DuckPGQ is a DuckDB extension for graph workloads that supports the SQL/PGQ stan
 
 DuckPGQ leverages the power of DuckDB to bring high-performance, SQL-based graph query capabilities directly to your analytical workflows.
 
-[View DuckPGQ on GitHub](https://github.com/cwida/duckpgq-extension)
+[![Join Discord](https://img.shields.io/badge/Join-Discord-5865F2?logo=discord&style=flat)](https://discord.gg/8X95XHhQB7)
+
+## Key Features
+
+<div class="grid cards" markdown>
+
+- :material-database-search: **SQL/PGQ Standard**  
+  Supports graph pattern matching with SQL/PGQ, following the SQL:2023 standard.
+- :material-rocket-launch: **High Performance**  
+  Leverages DuckDB for efficient, in-process graph analytics.
+- :material-chart-bar: **Easy To Install**  
+  Seamlessly integrate with DuckDB through a simple setup process, requiring no dependencies.
+- :material-lock-open-variant-outline: **Open Source**  
+  Community-driven, extensible, and free to use.
+
+</div>
+
+
 
 ## Getting Started
 As of DuckDB v1.0.0, DuckPGQ is available as a community extension. From any DuckDB instance, the following two commands allow you to install and load DuckPGQ:
