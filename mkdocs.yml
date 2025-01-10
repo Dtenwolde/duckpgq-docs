@@ -1,4 +1,5 @@
-site_name: DuckPGQ Documentation
+site_name: DuckPGQ
+site_url: https://duckpgq.org
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -36,17 +37,37 @@ theme:
   features:
     - content.code.copy
     - content.code.select
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.path
+    - announce.dismiss
   icon:
     repo: fontawesome/brands/github
 repo_url: https://github.com/cwida/duckpgq-extension
 repo_name: DuckPGQ
 
+plugins:
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date  # Displays full date and time
+      fallback_to_build_date: true
+      exclude:
+        - index.md
+  - search
+  - git-authors:
+        show_email_address: true
+        href: "https://github.com/{name}"
+        sort_authors_by: name
+        exclude:
+            - index.md
+  - social:
+      cards_layout_options:
+        title: DuckPGQ
+        description: DuckDB extension that adds support for SQL/PGQ and graph algorithms
+
+
 extra:
   generator: false
-  footer:
-    text: |
-      <a href="https://github.com/cwida/duckpgq-extension/issues/new?title=Issue%20found%20in%20documentation&body=Please%20describe%20the%20problem%20and%20include%20a%20URL%20of%20the%20page%20if%20possible." 
-         title="Create GitHub issue" target="_blank">Report a Documentation Issue</a>
 
 extra_javascript:
   - https://kit.fontawesome.com/a076d05399.js

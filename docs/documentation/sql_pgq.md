@@ -10,35 +10,33 @@ The language features a visual graph syntax inspired by Cypher while also suppor
 See [here](https://github.com/szarnyasg/gql-sql-pgq-pointers) for a list of resources related to SQL/PGQ.
 
 ## Loading data
-
-If you have followed the [installation instructions](https://www.notion.so/Loading-DuckPGQ-29eda93a97b140e1861614cce1f5498c?pvs=21) and executed `./build/release/duckdb`, you will be able to load the LDBC SNB dataset at scale factor 0.003 using the following command:
-
+Starting with an empty DuckDB database, load the `Person` and `Person_knows_person` tables from the LDBC SNB dataset using the following commands:
 ```sql
-import database 'duckdb-pgq/data/SNB0.003';
+CREATE TABLE Person AS SELECT * FROM 'https://gist.githubusercontent.com/Dtenwolde/2b02aebbed3c9638a06fda8ee0088a36/raw/8c4dc551f7344b12eaff2d1438c9da08649d00ec/person-sf0.003.csv';
+CREATE TABLE Person_knows_person AS SELECT * FROM 'https://gist.githubusercontent.com/Dtenwolde/81c32c9002d4059c2c3073dbca155275/raw/8b440e810a48dcaa08c07086e493ec0e2ec6b3cb/person_knows_person-sf0.003.csv';
 ```
 
 ## Creating the property graph
 
-The next step is to create a property graph based on the data. This property graph functions similarly to a `VIEW`, serving as a layer on top of the data. Each property graph is associated with a single connection. For a more in-depth explanation of property graphs in DuckPGQ, see 
+Next, create a property graph, which is persistent across database sessions and automatically reflects changes made to the underlying data. Similar to a VIEW, the property graph provides a layer for querying graph structures, ensuring that updates to the base tables are immediately reflected in the graph representation. For more details, refer to [Property graph](property_graph.md).
 
-[Property graph](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21)
-
-Execute the following command to create a property graph: 
+Use the following command to define the property graph:
 
 ```sql
 CREATE PROPERTY GRAPH snb
 VERTEX TABLES (
-    Person LABEL Person
+    Person
   )
 EDGE TABLES (
-    Person_knows_person SOURCE KEY ( person1id ) REFERENCES Person ( id )
-                        DESTINATION KEY ( person2id ) REFERENCES Person ( id )
-                        LABEL Knows
+    Person_knows_person 
+        SOURCE KEY ( person1id ) REFERENCES Person ( id )
+        DESTINATION KEY ( person2id ) REFERENCES Person ( id )
+        LABEL Knows
   );
 ```
 
-If everything goes well, the following will be returned. In that case, you can execute queries containing SQL/PGQ syntax on this property graph.
-```
+If successful, you will see the following confirmation, allowing you to execute queries using SQL/PGQ syntax on the created property graph:
+```sql { .yaml .no-copy }
 ┌─────────┐
 │ Success │
 │ boolean │
@@ -60,7 +58,7 @@ FROM GRAPH_TABLE(snb
 
 The result will be: 
 
-``` { .yaml .no-copy }
+```sql { .yaml .no-copy }
 ┌───────────┐
 │ firstName │
 │  varchar  │
@@ -105,7 +103,7 @@ LIMIT 5;
 
 The result will be: 
 
-``` { .yaml .no-copy }
+```sql { .yaml .no-copy }
 ┌────────────────┬─────────────┐
 │ path_length(p) │  firstName  │
 │     int64      │   varchar   │
@@ -129,13 +127,13 @@ Other options for path-finding are:
 
 ### Retrieving the path
 
-DuckPGQ also allows you to retrieve the `rowid`’s of the nodes and edges that are on the shortest path by adding `element_id(<path_variable>)` in the `COLUMNS` clause. 
+DuckPGQ also allows you to retrieve the `rowid`’s of the nodes and edges that are on the shortest path by adding `element_id(<path variable>)` in the `COLUMNS` clause. 
 
 Other options are: 
 
-- `vertices(<path_variable>)` : Returns the `rowid` ’s of the vertices on the shortest path.
-- `edges(<path_variable>)` : Returns the `rowid` ’s of the edges on the shortest path.
-- `path_length(<path_variable>)`: Returns the path length of the shortest path.
+- `vertices(<path variable>)` : Returns the `rowid` ’s of the vertices on the shortest path.
+- `edges(<path variable>)` : Returns the `rowid` ’s of the edges on the shortest path.
+- `path_length(<path variable>)`: Returns the path length of the shortest path.
 
 The following query shows an example:
 
@@ -150,7 +148,7 @@ FROM GRAPH_TABLE (snb
 
 The result will be: 
 
-``` { .yaml .no-copy }
+```sql { .yaml .no-copy }
 ┌───────────────────────────┬────────────────┬─────────────┬────────────────┬─────────────┐
 │       element_id(p)       │  vertices(p)   │  edges(p)   │ path_length(p) │  firstName  │
 │          int64[]          │    int64[]     │   int64[]   │     int64      │   varchar   │
