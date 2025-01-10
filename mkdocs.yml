@@ -22,6 +22,7 @@ nav:
     - Property Graph: documentation/property_graph.md
     - Loading DuckPGQ: documentation/loading.md
     - Building DuckPGQ: documentation/building_duckpgq.md
+    - Contribution & Setup Guide: documentation/contribution_guide.md
   - Resources:
     - Publications: resources/publications.md
 
