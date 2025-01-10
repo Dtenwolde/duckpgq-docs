@@ -15,6 +15,14 @@ markdown_extensions:
   - attr_list
   - md_in_html
 
+nav:
+  - DuckPGQ: index.md
+  - Documentation:
+    - SQL/PGQ: documentation/sql_pgq.md
+    - Graph Functions: documentation/graph_functions.md
+    - Property Graph: documentation/property_graph.md
+    - Loading DuckPGQ: documentation/loading.md
+
 theme:
   name: material
   custom_dir: overrides
