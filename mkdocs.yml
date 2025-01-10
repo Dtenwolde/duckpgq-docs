@@ -9,7 +9,9 @@ markdown_extensions:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.inlinehilite
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      auto_append: ["_snippets/_report_issue.md"]
+      base_path: ["docs"]
   - pymdownx.superfences
   - attr_list
   - md_in_html
@@ -41,9 +43,10 @@ repo_name: DuckPGQ
 
 extra:
   generator: false
-#  social:
-#    - icon: fontawesome/brands/discord
-#      link: https://discord.gg/8X95XHhQB7
+  footer:
+    text: |
+      <a href="https://github.com/cwida/duckpgq-extension/issues/new?title=Issue%20found%20in%20documentation&body=Please%20describe%20the%20problem%20and%20include%20a%20URL%20of%20the%20page%20if%20possible." 
+         title="Create GitHub issue" target="_blank">Report a Documentation Issue</a>
 
 extra_javascript:
   - https://kit.fontawesome.com/a076d05399.js
