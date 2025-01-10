@@ -40,9 +40,10 @@ repo_url: https://github.com/cwida/duckpgq-extension
 repo_name: DuckPGQ
 
 extra:
-  social:
-    - icon: fontawesome/brands/discord
-      link: https://discord.gg/8X95XHhQB7
+  generator: false
+#  social:
+#    - icon: fontawesome/brands/discord
+#      link: https://discord.gg/8X95XHhQB7
 
 extra_javascript:
   - https://kit.fontawesome.com/a076d05399.js

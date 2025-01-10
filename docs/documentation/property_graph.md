@@ -1,4 +1,6 @@
-# Create property graph
+# Property Graph
+
+## CREATE
 
 The first step in using SQL/PGQ is creating a property graph as a layer on top of your data. In DuckPGQ, property graphs are transient; they only exist as long as the connection to the database is open. 
 
@@ -41,7 +43,7 @@ EDGE TABLES (
 );
 ```
 
-## Vertex table
+### Vertex table
 
 ```sql
 <table name> [ AS <table name alias> ] [ <[properties](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21)> ] [ LABEL <[label](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21)> ] 
@@ -49,7 +51,7 @@ EDGE TABLES (
 
 Only the table name is required for the vertex table; the table name alias, [properties](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21), and [label](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21) are optional. 
 
-## Edge table
+### Edge table
 
 To define the edge table, it is necessary to specify the table name, along with the source and destination keys.
 
@@ -63,13 +65,13 @@ Person_likes_Message  SOURCE KEY (PersonId) REFERENCES Person (id)
 
 The `LABEL` and the `PROPERTIES` are optional. 
 
-## Pre-defined PK-FK relations
+### Pre-defined PK-FK relations
 
 If the PK-FK relationships have already been defined during table creation, it is not necessary to repeat them when creating a property graph, unless this leads to ambiguity. The system will automatically infer the relationships based on the existing PK-FK constraints.
 
 **Simple Example**
 
-For example, given the following schema:
+Given the following schema:
 
 ```sql
 CREATE TABLE a (
@@ -101,7 +103,7 @@ Here, the system can infer that the column src in edge_ab references the primary
 
 If an edge table has more than one PK-FK relationship defined with the same vertex table, it becomes ambiguous which relationship to use for the SOURCE and DESTINATION. In this case, you must explicitly define both the source and destination keys.
 
-For example, consider the following schema:
+Consider the following schema:
 
 ```sql
 CREATE TABLE Person(
@@ -143,11 +145,9 @@ EDGE TABLES (Person_knows_Person
 
 By specifying the KEY and REFERENCES clauses explicitly, you remove any ambiguity, allowing the graph creation to proceed successfully.
 
-## Inheritance
+### Inheritance
 
 Inheritance in relational databases can be achieved by using a special column that indicates the type of entity, allowing a single table to store multiple types of related entities. This approach is often referred to as single-table inheritance.
-
-### Example
 
 Consider a table called `Organisation` that can represent different types of organizations, such as companies and universities. We use a special column called `typemask` to indicate the type of organization.
 
@@ -165,7 +165,7 @@ Consider a table called `Organisation` that can represent different types of org
 
 In this example, the `Organisation` table can store different types of organizations by using the `typemask` column to distinguish between them. This approach allows for flexibility and avoids the need for multiple tables to represent each type of organization.
 
-### Inheritance Definition
+#### Inheritance Definition
 
 The inheritance is defined using the `typemask` column:
 
@@ -186,7 +186,7 @@ FROM GRAPH_TABLE (snb
 )
 ```
 
-## Properties
+### Properties
 
 Properties can restrict the columns used in a SQL/PGQ query. 
 
@@ -196,7 +196,7 @@ The specifications allow several options:
 - `PROPERTIES [ARE] ALL COLUMNS [EXCEPT (column [, column])]`: Allow all columns from the original table except the columns listed in the `EXCEPT` list.
 - `NO PROPERTIES`: Allow no columns from the original table
 
-## Label
+### Label
 
 The label can be used to reference the vertex or edge table in future PGQ queries. However, it is completely optional and when omitted the original table name can be used in PGQ queries. It can be useful to make abbreviations of table names. In the following example, no label is specified for `Person`, but for `Person_knows_Person` we create the label `Knows`.
 
@@ -229,7 +229,7 @@ LIMIT 1;
 └───────┴────────────────┘
 ```
 
-# Describe property graph
+## DESCRIBE
 
 Once you have created a property graph, you can use `DESCRIBE PROPERTY GRAPH` to show information about it, such as the table name, label, and in the case of edge tables their source and destination keys. For the property graph `snb` created above, the output will be: 
 
@@ -244,7 +244,7 @@ Once you have created a property graph, you can use `DESCRIBE PROPERTY GRAPH` to
 
 ```
 
-# Drop property graph
+## DROP
 
 Delete a property graph with the name `pg`
 
@@ -261,6 +261,6 @@ DROP IF EXISTS PROPERTY GRAPH pg
 Adding `IF EXISTS` will not throw an error if `<property graph name>` does not exist. 
 Omitting this will result in a `BinderException` if the `<property graph name>` does not exist. 
 
-# Alter property graph
+## ALTER
 To be supported in a future version
 For now, dropping and recreating the property graph is required if you wish to alter the property graph.

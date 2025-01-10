@@ -1,3 +1,5 @@
+# SQL/PGQ
+
 SQL/PGQ is a graph query language built on top of SQL, designed to bring graph pattern matching capabilities to both seasoned SQL users and those new to graph technology. Standardized by the International Organization for Standardization (ISO), it offers a declarative approach to querying property graphs, which store nodes, edges, and properties.
 
 The language features a visual graph syntax inspired by Cypher while also supporting traditional SQL syntax, easing the transition for SQL users. With SQL/PGQ, you can query property graphs to:
@@ -6,8 +8,6 @@ The language features a visual graph syntax inspired by Cypher while also suppor
 - Calculate the shortest path between two nodes
 
 See [here](https://github.com/szarnyasg/gql-sql-pgq-pointers) for a list of resources related to SQL/PGQ.
-
-# Examples
 
 ## Loading data
 

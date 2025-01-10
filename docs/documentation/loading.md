@@ -1,6 +1,8 @@
+# Loading DuckPGQ
+
 Starting from DuckDB `v1.0.0`, it is possible to load the **DuckPGQ** extension as a [community extension](https://community-extensions.duckdb.org/extensions/duckpgq.html). Please note that this version is not the latest. For instructions on loading the latest version, see [Loading the latest version](https://www.notion.so/Loading-DuckPGQ-29eda93a97b140e1861614cce1f5498c?pvs=21).
 
-### Loading the Community Version
+## Loading the Community Version
 
 To install and load the community version of DuckPGQ, use the following SQL commands in the DuckDB CLI or within a DuckDB connection:
 

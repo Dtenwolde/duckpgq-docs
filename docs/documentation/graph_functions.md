@@ -1,3 +1,5 @@
+# Graph Functions
+
 DuckPGQ provides a range of graph algorithms that allow you to conveniently analyze your data directly within DuckDB.
 
 **Supported algorithms:**
@@ -30,7 +32,7 @@ CREATE PROPERTY GRAPH snb
   );
 ```
 
-# Local Clustering Coefficient
+## Local Clustering Coefficient
 
 The **Local Clustering Coefficient (LCC)** measures how closely a node's neighbours are connected, forming a local cluster. In this example, we calculate the LCC for each person in the graph.
 
@@ -58,7 +60,7 @@ SELECT *
 FROM local_clustering_coefficient(snb, Person, Knows);
 ```
 
-# Weakly Connected Component
+## Weakly Connected Component
 
 The **Weakly Connected Component (WCC)** identifies groups of nodes where any two nodes are connected by a path, regardless of edge direction. In this example, we calculate the WCC for each person in the graph.
 
@@ -87,7 +89,7 @@ SELECT *
 FROM weakly_connected_component(snb, Person, Knows);
 ```
 
-# PageRank
+## PageRank
 
 The **PageRank** algorithm ranks nodes based on their importance in a directed graph, where a node's rank is determined by the ranks of the nodes linking to it. In this example, we calculate the PageRank for each person in the graph.
 

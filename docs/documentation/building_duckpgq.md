@@ -1,11 +1,13 @@
-# Installation instructions from source
+# Building DuckPGQ
+
+## Installation instructions from source
 ```bash
 git clone --recurse-submodules https://github.com/cwida/duckpgq-extension.git
 ```
 
 Note that using `--recurse-submodules` will ensure that the correct version of DuckDB is pulled, allowing you to get started.
 
-# Building the extension
+## Building the extension
 
 To build the extension, run the following command:
 ```bash
@@ -33,5 +35,5 @@ The main binaries that will be built are:
 - `unittest`is the test runner of DuckDB. Again, the extension is already linked into the binary.
 - `duckpgq.duckdb_extension`is the loadable binary as it would be distributed.
 
-# Running the extension
+## Running the extension
 Start the shell by executing `./build/<build mode>/duckdb` to run the extension code.
