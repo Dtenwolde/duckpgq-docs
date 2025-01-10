@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # DuckPGQ
 DuckPGQ is a DuckDB extension for graph workloads that supports the SQL/PGQ standard. 
 
