@@ -29,17 +29,16 @@ Execute the following command to create a property graph:
 CREATE PROPERTY GRAPH snb
 VERTEX TABLES (
     Person LABEL Person
-    )
+  )
 EDGE TABLES (
-    Person_knows_person     SOURCE KEY ( person1id ) REFERENCES Person ( id )
-                            DESTINATION KEY ( person2id ) REFERENCES Person ( id )
-                            LABEL Knows
-    );
+    Person_knows_person SOURCE KEY ( person1id ) REFERENCES Person ( id )
+                        DESTINATION KEY ( person2id ) REFERENCES Person ( id )
+                        LABEL Knows
+  );
 ```
 
 If everything goes well, the following will be returned. In that case, you can execute queries containing SQL/PGQ syntax on this property graph.
-
-```sql
+```
 ┌─────────┐
 │ Success │
 │ boolean │
@@ -61,7 +60,7 @@ FROM GRAPH_TABLE(snb
 
 The result will be: 
 
-```sql
+``` { .yaml .no-copy }
 ┌───────────┐
 │ firstName │
 │  varchar  │
@@ -95,7 +94,7 @@ DuckPGQ only supports finding `ANY SHORTEST` path between nodes, which is non-de
 
 To query the shortest path length between Jan and the first five persons sorted alphabetically, use the following query:
 
-```sql
+``` sql
 FROM GRAPH_TABLE (snb
     MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]-> +(b:Person)
     COLUMNS (path_length(p), b.firstName)
@@ -106,7 +105,7 @@ LIMIT 5;
 
 The result will be: 
 
-```sql
+``` { .yaml .no-copy }
 ┌────────────────┬─────────────┐
 │ path_length(p) │  firstName  │
 │     int64      │   varchar   │
@@ -140,7 +139,7 @@ Other options are:
 
 The following query shows an example:
 
-```sql
+``` sql
 FROM GRAPH_TABLE (snb
       MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]-> +(b:Person)
       COLUMNS (element_id(p), vertices(p), edges(p), path_length(p), b.firstName)
@@ -151,7 +150,7 @@ FROM GRAPH_TABLE (snb
 
 The result will be: 
 
-```sql
+``` { .yaml .no-copy }
 ┌───────────────────────────┬────────────────┬─────────────┬────────────────┬─────────────┐
 │       element_id(p)       │  vertices(p)   │  edges(p)   │ path_length(p) │  firstName  │
 │          int64[]          │    int64[]     │   int64[]   │     int64      │   varchar   │
