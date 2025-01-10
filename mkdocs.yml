@@ -1,7 +1,6 @@
 site_name: DuckPGQ Documentation
 
 markdown_extensions:
-
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -22,9 +21,13 @@ nav:
     - Graph Functions: documentation/graph_functions.md
     - Property Graph: documentation/property_graph.md
     - Loading DuckPGQ: documentation/loading.md
+  - Resources:
+    - Publications: resources/publications.md
 
 theme:
   name: material
+  logo: assets/duckpgq-logo.png
+  favicon: assets/duckpgq-logo-circular.png
   custom_dir: overrides
   features:
     - content.code.copy
