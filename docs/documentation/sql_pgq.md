@@ -96,7 +96,7 @@ To query the shortest path length between Jan and the first five persons sorted 
 FROM GRAPH_TABLE (snb
     MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]-> +(b:Person)
     COLUMNS (path_length(p), b.firstName)
-    )
+  )
 ORDER BY firstName
 LIMIT 5;
 ```
@@ -139,11 +139,11 @@ The following query shows an example:
 
 ``` sql
 FROM GRAPH_TABLE (snb
-      MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]-> +(b:Person)
-      COLUMNS (element_id(p), vertices(p), edges(p), path_length(p), b.firstName)
-      )
-  ORDER BY firstName
-  LIMIT 5;
+    MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]-> +(b:Person)
+    COLUMNS (element_id(p), vertices(p), edges(p), path_length(p), b.firstName)
+  )
+ORDER BY firstName
+LIMIT 5;
 ```
 
 The result will be: 

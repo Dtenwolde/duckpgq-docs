@@ -46,10 +46,10 @@ EDGE TABLES (
 ### Vertex table
 
 ```sql
-<table name> [ AS <table name alias> ] [ <[properties](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21)> ] [ LABEL <[label](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21)> ] 
+<table name> [ AS <table name alias> ] [ PROPERTIES (<Properties>) ] [ LABEL <Label> ] 
 ```
 
-Only the table name is required for the vertex table; the table name alias, [properties](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21), and [label](https://www.notion.so/Property-graph-05c1dffe3f2547f0abfa3ea5a2b4eae1?pvs=21) are optional. 
+Only the table name is required for the vertex table; the table name alias, [properties](property_graph.md#properties), and [label](property_graph.md#labels) are optional. 
 
 ### Edge table
 

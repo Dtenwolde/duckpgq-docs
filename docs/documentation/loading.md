@@ -1,6 +1,6 @@
 # Loading DuckPGQ
 
-Starting from DuckDB `v1.0.0`, it is possible to load the **DuckPGQ** extension as a [community extension](https://community-extensions.duckdb.org/extensions/duckpgq.html). Please note that this version is not the latest. For instructions on loading the latest version, see [Loading the latest version](https://www.notion.so/Loading-DuckPGQ-29eda93a97b140e1861614cce1f5498c?pvs=21).
+Starting from DuckDB `v1.0.0`, it is possible to load the **DuckPGQ** extension as a [community extension](https://community-extensions.duckdb.org/extensions/duckpgq.html). Please note that this version is not the latest. For instructions on loading the latest version, see [Loading the latest version](loading.md#loading-the-latest-version).
 
 ## Loading the Community Version
 
@@ -14,11 +14,11 @@ INSTALL 'duckpgq' FROM 'community';
 LOAD 'duckpgq';
 ```
 
-# Loading the latest version
+## Loading the latest version
 
 To use the latest version of **DuckPGQ**, you will need to enable the `unsigned` flag in DuckDB. This allows the installation of custom, unsigned extensions from external repositories.
 
-## CLI Instructions
+### CLI
 
 To load the latest version in the DuckDB CLI:
 
@@ -36,7 +36,7 @@ FORCE INSTALL 'duckpgq';
 LOAD 'duckpgq';
 ```
 
-## Python Instructions
+### Python
 
 To load the latest version of DuckPGQ within a Python environment, follow these steps:
 

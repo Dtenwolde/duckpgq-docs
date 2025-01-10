@@ -31,8 +31,8 @@ nav:
 
 theme:
   name: material
-  logo: assets/duckpgq-logo.png
-  favicon: assets/duckpgq-logo-circular.png
+  logo: assets/duckpgq-logo-circular.png
+  favicon: assets/duckpgq-logo-head.png
   custom_dir: overrides
   features:
     - content.code.copy

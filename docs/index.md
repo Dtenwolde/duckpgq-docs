@@ -37,7 +37,7 @@ load duckpgq;
 
 See the official [DuckPGQ community page](https://community-extensions.duckdb.org/extensions/duckpgq.html) for more information.
 
-For older DuckDB versions, please see [Loading DuckPGQ](https://www.notion.so/Loading-DuckPGQ-29eda93a97b140e1861614cce1f5498c?pvs=21).
+For older DuckDB versions, please see [Loading DuckPGQ](loading.md).
 
 ## SQL/PGQ
 
@@ -94,7 +94,7 @@ Finally, once we are done with our property graph, we can drop it:
 DROP PROPERTY GRAPH snb; 
 ```
 
-For more information on SQL/PGQ, please see the dedicated page explaining [SQL/PGQ](https://www.notion.so/SQL-PGQ-5016889634db44c99cd607205bfbf68a?pvs=21) in more detail.
+For more information on SQL/PGQ, please see the dedicated page explaining [SQL/PGQ](sql_pgq.md) in more detail.
 
 ## WIP Disclaimer
 
