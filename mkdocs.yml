@@ -1,5 +1,7 @@
 site_name: DuckPGQ
 site_url: https://duckpgq.org
+site_description: DuckDB extension that adds support for SQL/PGQ and graph algorithms
+
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -18,7 +20,7 @@ markdown_extensions:
   - md_in_html
 
 nav:
-  - DuckPGQ: index.md
+  - Home: index.md
   - Documentation:
     - SQL/PGQ: documentation/sql_pgq.md
     - Graph Functions: documentation/graph_functions.md
@@ -33,6 +35,21 @@ theme:
   name: material
   logo: assets/duckpgq-logo-circular.png
   favicon: assets/duckpgq-logo-head.png
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
   custom_dir: overrides
   features:
     - content.code.copy
@@ -60,11 +77,6 @@ plugins:
         sort_authors_by: name
         exclude:
             - index.md
-  - social:
-      cards_layout_options:
-        title: DuckPGQ
-        description: DuckDB extension that adds support for SQL/PGQ and graph algorithms
-
 
 extra:
   generator: false

@@ -49,7 +49,7 @@ EDGE TABLES (
 <table name> [ AS <table name alias> ] [ PROPERTIES (<Properties>) ] [ LABEL <Label> ] 
 ```
 
-Only the table name is required for the vertex table; the table name alias, [properties](property_graph.md#properties), and [label](property_graph.md#labels) are optional. 
+Only the table name is required for the vertex table; the table name alias, [properties](property_graph.md#properties), and [label](property_graph.md#label) are optional. 
 
 ### Edge table
 

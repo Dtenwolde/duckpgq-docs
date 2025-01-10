@@ -37,7 +37,7 @@ load duckpgq;
 
 See the official [DuckPGQ community page](https://community-extensions.duckdb.org/extensions/duckpgq.html) for more information.
 
-For older DuckDB versions, please see [Loading DuckPGQ](loading.md).
+For older DuckDB versions, please see [Loading DuckPGQ](documentation/loading.md).
 
 ## SQL/PGQ
 
@@ -94,7 +94,7 @@ Finally, once we are done with our property graph, we can drop it:
 DROP PROPERTY GRAPH snb; 
 ```
 
-For more information on SQL/PGQ, please see the dedicated page explaining [SQL/PGQ](sql_pgq.md) in more detail.
+For more information on SQL/PGQ, please see the dedicated page explaining [SQL/PGQ](documentation/sql_pgq.md) in more detail.
 
 ## WIP Disclaimer
 
