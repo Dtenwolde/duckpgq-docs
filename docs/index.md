@@ -8,9 +8,12 @@ DuckPGQ is a DuckDB extension for graph workloads that supports the SQL/PGQ stan
 
 DuckPGQ leverages the power of DuckDB to bring high-performance, SQL-based graph query capabilities directly to your analytical workflows.
 
-<div class="highlight" style="border: 1px solid #0078D4; border-radius: 8px; padding: 15px; background-color: #f3f9ff; margin: 20px 0;">
-  <p><strong>Install DuckPGQ and Load the Extension:</strong></p>
-  <pre><code>install duckpgq from community;
+<div class="highlight" style="border: 2px solid var(--md-accent-fg-color); border-radius: 12px; padding: 20px; background-color: var(--md-overlay-bg-color); margin: 20px 0; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);">
+  <p style="font-size: 1.2em; font-weight: bold; color: var(--md-accent-fg-color); margin-bottom: 15px;">
+    🚀 Install DuckPGQ and Load the Extension:
+  </p>
+  <pre style="background-color: var(--md-code-bg-color); padding: 10px; border-radius: 8px; color: var(--md-default-fg-color);">
+<code>install duckpgq from community;
 load duckpgq;
 </code></pre>
 </div>

@@ -1,5 +1,5 @@
-<div class="md-typeset" style="border: 1px solid #0078D4; border-radius: 8px; padding: 10px; background-color: #f3f9ff; margin: 20px 0;">
-  <a href="#" id="report-issue-link" class="externallink" target="_blank" style="text-decoration: none; font-weight: bold; color: #0078D4;">
+<div class="md-typeset" style="border: 1px solid var(--md-primary-fg-color); border-radius: 8px; padding: 10px; background-color: var(--md-overlay-bg-color); margin: 20px 0;">
+  <a href="#" id="report-issue-link" class="externallink" target="_blank" style="text-decoration: none; font-weight: bold; color: var(--md-primary-fg-color);">
     📢 Report a Documentation Issue
   </a>
 </div>
