@@ -1,26 +1,34 @@
 ---
 hide:
   - navigation
+  - toc
 ---
 
-# DuckPGQ
-DuckPGQ is a DuckDB extension for graph workloads that supports the SQL/PGQ standard. 
-
-DuckPGQ leverages the power of DuckDB to bring high-performance, SQL-based graph query capabilities directly to your analytical workflows.
-
-<div class="highlight" style="border: 2px solid var(--md-accent-fg-color); border-radius: 12px; padding: 20px; background-color: var(--md-overlay-bg-color); margin: 20px 0; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);">
-  <p style="font-size: 1.2em; font-weight: bold; color: var(--md-accent-fg-color); margin-bottom: 15px;">
-    🚀 Install DuckPGQ and Load the Extension:
+<div style="text-align: center; padding: 20px;">
+  <h1 style="font-size: 2.5em; font-weight: bold; margin-bottom: 10px;">DuckPGQ</h1>
+  <p style="font-size: 1.2em; color: var(--md-primary-fg-color);">
+    DuckPGQ is a DuckDB extension for graph workloads that supports the SQL/PGQ standard.
   </p>
-  <pre style="background-color: var(--md-code-bg-color); padding: 10px; border-radius: 8px; color: var(--md-default-fg-color);">
-<code>install duckpgq from community;
-load duckpgq;
+  <p style="font-size: 1.1em; color: var(--md-default-fg-color); margin-top: 10px; font-style: italic;">
+    Leveraging the power of DuckDB to bring high-performance, SQL-based graph query capabilities directly to your analytical workflows.
+  </p>
+</div>
+
+<div style="display: flex; justify-content: center; margin: 40px 0;">
+  <div class="highlight" style="border: 2px solid var(--md-accent-fg-color); border-radius: 12px; padding: 20px; background-color: var(--md-overlay-bg-color); box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); max-width: 600px; width: 100%;">
+    <p style="font-size: 1.2em; font-weight: bold; color: var(--md-accent-fg-color); margin-bottom: 15px; text-align: center;">
+      🚀 Install DuckPGQ and Load the Extension:
+    </p>
+    <pre style="background-color: var(--md-code-bg-color); padding: 10px; border-radius: 8px; color: var(--md-default-fg-color); margin: 0; text-align: left;">
+<code><span style="color: var(--md-accent-fg-color); font-weight: bold;">INSTALL</span> duckpgq <span style="color: var(--md-accent-fg-color); font-weight: bold;">FROM</span> community;
+<span style="color: var(--md-accent-fg-color); font-weight: bold;">LOAD</span> duckpgq;
 </code></pre>
+  </div>
 </div>
 
 ## Key Features
 
-<div class="grid cards" markdown>
+<div class="grid cards" markdown style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
 
 - :material-database-search: **SQL/PGQ Standard**  
   Supports graph pattern matching with SQL/PGQ, following the SQL:2023 standard.
