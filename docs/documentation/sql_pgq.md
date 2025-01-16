@@ -3,6 +3,7 @@
 SQL/PGQ is a graph query language built on top of SQL, designed to bring graph pattern matching capabilities to both seasoned SQL users and those new to graph technology. Standardized by the International Organization for Standardization (ISO), it offers a declarative approach to querying property graphs, which store nodes, edges, and properties.
 
 The language features a visual graph syntax inspired by Cypher while also supporting traditional SQL syntax, easing the transition for SQL users. With SQL/PGQ, you can query property graphs to:
+
 - Discover paths between nodes
 - Identify specific graph patterns
 - Calculate the shortest path between two nodes
@@ -18,7 +19,7 @@ CREATE TABLE Person_knows_person AS SELECT * FROM 'https://gist.githubuserconten
 
 ## Creating the property graph
 
-Next, create a property graph, which is persistent across database sessions and automatically reflects changes made to the underlying data. Similar to a VIEW, the property graph provides a layer for querying graph structures, ensuring that updates to the base tables are immediately reflected in the graph representation. For more details, refer to [Property graph](property_graph.md).
+Next, create a property graph, which is persistent across database sessions and automatically reflects changes made to the underlying data. Similar to a `VIEW`, the property graph provides a layer for querying graph structures, ensuring that updates to the base tables are immediately reflected in the graph representation. For more details, refer to [Property graph](property_graph.md).
 
 Use the following command to define the property graph:
 
@@ -94,7 +95,7 @@ To query the shortest path length between Jan and the first five persons sorted 
 
 ``` sql
 FROM GRAPH_TABLE (snb
-    MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]-> +(b:Person)
+    MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]->+(b:Person)
     COLUMNS (path_length(p), b.firstName)
   )
 ORDER BY firstName
@@ -139,7 +140,7 @@ The following query shows an example:
 
 ``` sql
 FROM GRAPH_TABLE (snb
-    MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]-> +(b:Person)
+    MATCH p = ANY SHORTEST (a:Person WHERE a.firstName = 'Jan')-[k:knows]->+(b:Person)
     COLUMNS (element_id(p), vertices(p), edges(p), path_length(p), b.firstName)
   )
 ORDER BY firstName
