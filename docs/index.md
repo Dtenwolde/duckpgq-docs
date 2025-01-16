@@ -9,6 +9,9 @@ hide:
   <p style="font-size: 1.2em; color: var(--md-primary-fg-color);">
     DuckPGQ is a DuckDB community extension for graph workloads that supports the SQL/PGQ standard.
   </p>
+  <p style="font-size: 1.1em; color: var(--md-default-fg-color); margin-top: 10px; font-style: italic;">
+    Leveraging the power of DuckDB to bring high-performance, SQL-based graph query capabilities directly to your analytical workflows.
+  </p>
 </div>
 
 <div style="display: flex; justify-content: center; margin: 40px 0;">
