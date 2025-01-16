@@ -40,7 +40,7 @@ LOAD 'duckpgq';
 
 To load the latest version of DuckPGQ within a Python environment, follow these steps:
 
-1. Connect to DuckDB with the `allow_unsigned_extensions` flag enabled:
+Connect to DuckDB with the `allow_unsigned_extensions` flag enabled:
 
 ```sql
 import duckdb
@@ -48,7 +48,7 @@ import duckdb
 conn = duckdb.connect(config={"allow_unsigned_extensions": "true"})
 ```
 
-1. Execute the following commands to load the latest version of DuckPGQ:
+Execute the following commands to load the latest version of DuckPGQ:
 
 ```sql
 conn.execute("SET custom_extension_repository = 'http://duckpgq.s3.eu-north-1.amazonaws.com';")

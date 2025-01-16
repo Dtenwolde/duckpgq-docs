@@ -9,9 +9,6 @@ hide:
   <p style="font-size: 1.2em; color: var(--md-primary-fg-color);">
     DuckPGQ is a DuckDB community extension for graph workloads that supports the SQL/PGQ standard.
   </p>
-  <p style="font-size: 1.1em; color: var(--md-default-fg-color); margin-top: 10px; font-style: italic;">
-    Leveraging the power of DuckDB to bring high-performance, SQL-based graph query capabilities directly to your analytical workflows.
-  </p>
 </div>
 
 <div style="display: flex; justify-content: center; margin: 40px 0;">
@@ -20,10 +17,28 @@ hide:
       🚀 Install DuckPGQ and Load the Extension:
     </p>
     <div style="text-align: center; margin-bottom: 15px;">
-      <select id="version-dropdown" style="padding: 8px 12px; border: 1px solid var(--md-accent-fg-color); border-radius: 8px; background-color: var(--md-overlay-bg-color); color: var(--md-default-fg-color); font-size: 1em;">
+      <select id="version-dropdown" style="
+        padding: 0.4em 0.6em; 
+        border: 0.08em solid var(--md-accent-fg-color); 
+        border-radius: 0.4em; 
+        background-color: var(--md-overlay-bg-color); 
+        color: var(--md-default-fg-color); 
+        font-size: 0.9rem; 
+        line-height: 1.4; 
+        max-width: 10rem; 
+        width: 100%; 
+        appearance: none;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23ccc" d="M2 0L0 2h4z" /%3E%3C/svg%3E');
+        background-repeat: no-repeat;
+        background-position: right 0.6em center;
+        background-size: 0.8em;
+        padding-right: 2em;
+        box-sizing: border-box;">
         <option value="CLI">CLI</option>
         <option value="Python">Python</option>
-        <option value="NodeJS">NodeJS</option>
+        <option value="NodeJS">NodeJS</option>        
+        <option value="R">R</option>
+        <option value="Java">Java</option>
       </select>
     </div>
     <pre id="install-instructions" style="background-color: var(--md-code-bg-color); padding: 10px; border-radius: 8px; color: var(--md-default-fg-color); margin: 0; text-align: left;">

@@ -1,34 +1,50 @@
 select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding: 10px 12px; /* Adjust padding */
-  font-size: 16px; /* Larger font for better readability */
+  -webkit-appearance: none; /* Reset WebKit-specific styling */
+  -moz-appearance: none; /* Reset Mozilla-specific styling */
+  appearance: none; /* General reset */
+  padding: 12px 14px;
+  font-size: 16px;
   border: 1px solid var(--md-accent-fg-color);
   border-radius: 8px;
   background-color: var(--md-overlay-bg-color);
   color: var(--md-default-fg-color);
-  width: 100%; /* Ensure full width for better tap target */
-  max-width: 200px; /* Limit width for dropdown */
+  width: 100%;
+  max-width: 220px;
   box-sizing: border-box;
+  position: relative;
+  line-height: 1.5;
   text-align: center;
-}
+  cursor: pointer;
 
-select {
+  /* Add a custom arrow */
   background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23ccc" d="M2 0L0 2h4z" /%3E%3C/svg%3E');
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 10px 10px;
-  padding-right: 30px; /* Space for arrow */
+  padding-right: 40px; /* Space for the arrow */
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--md-accent-fg-color-hover);
+}
+
+select:hover {
+  cursor: pointer;
+}
+
+select:active {
+  background-color: var(--md-code-bg-color-hover);
 }
 
 select {
-  min-height: 44px; /* Minimum tap target height */
+  min-height: 48px; /* Ensure a proper tap target height */
 }
 
 @media (max-width: 600px) {
   select {
     font-size: 14px;
     max-width: 100%;
+    padding: 10px 12px;
   }
 }

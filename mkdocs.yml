@@ -64,6 +64,12 @@ repo_url: https://github.com/cwida/duckpgq-extension
 repo_name: DuckPGQ
 
 plugins:
+  - git-authors:
+      show_email_address: true
+      href: "https://github.com/{name}"
+      sort_authors_by: name
+      exclude:
+        - index.md
   - git-revision-date-localized:
       enable_creation_date: true
       type: date  # Displays full date and time
@@ -71,12 +77,6 @@ plugins:
       exclude:
         - index.md
   - search
-  - git-authors:
-        show_email_address: true
-        href: "https://github.com/{name}"
-        sort_authors_by: name
-        exclude:
-            - index.md
 
 extra:
   generator: false
