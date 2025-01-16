@@ -11,7 +11,7 @@ The tables will be divided into vertex tables and edge tables, having a primary 
 To create a property graph the syntax is as follows: 
 
 ```sql
-CREATE [ OR REPLACE ] PROPERTY GRAPH (<property graph name> 
+CREATE [ OR REPLACE ] PROPERTY GRAPH [ IF NOT EXISTS ] (<property graph name> 
 VERTEX TABLES (
 	<vertex table>
 [, <vertex table> ]
@@ -201,8 +201,6 @@ The specifications allow several options:
 The label can be used to reference the vertex or edge table in future PGQ queries. However, it is completely optional and when omitted the original table name can be used in PGQ queries. It can be useful to make abbreviations of table names. In the following example, no label is specified for `Person`, but for `Person_knows_Person` we create the label `Knows`.
 
 ```sql
-import database 'duckdb-pgq/data/SNB0.003';
-
 CREATE PROPERTY GRAPH snb
 VERTEX TABLES (
   Person
@@ -214,13 +212,13 @@ EDGE TABLES (
 );
 
 FROM GRAPH_TABLE (snb
-    MATCH (p:Person)-[k:knows]->(p2:Person)
+    MATCH (p:Person)-[k:Knows]->(p2:Person)
     COLUMNS (p.id, p2.id)
     )
 LIMIT 1;
 ```
 
-```sql
+```sql { .yaml .no-copy }
 ┌───────┬────────────────┐
 │  id   │      id_1      │
 │ int64 │     int64      │
@@ -233,7 +231,7 @@ LIMIT 1;
 
 Once you have created a property graph, you can use `DESCRIBE PROPERTY GRAPH` to show information about it, such as the table name, label, and in the case of edge tables their source and destination keys. For the property graph `snb` created above, the output will be: 
 
-```sql
+```sql { .yaml .no-copy }
 ┌─────────────────────┬─────────┬─────────────────┬──────────────┬───────────┬─────────────┬───────────────────┬────────────────┬────────────────┬───────────────┬────────────┐
 │     table_name      │  label  │ is_vertex_table │ source_table │ source_pk │  source_fk  │ destination_table │ destination_pk │ destination_fk │ discriminator │ sub_labels │
 │       varchar       │ varchar │     boolean     │   varchar    │ varchar[] │  varchar[]  │      varchar      │   varchar[]    │   varchar[]    │    varchar    │ varchar[]  │
@@ -241,7 +239,6 @@ Once you have created a property graph, you can use `DESCRIBE PROPERTY GRAPH` to
 │ Person              │ person  │ true            │              │           │             │                   │                │                │               │            │
 │ Person_knows_person │ knows   │ false           │ Person       │ [id]      │ [Person1Id] │ Person            │ [id]           │ [Person2Id]    │               │            │
 └─────────────────────┴─────────┴─────────────────┴──────────────┴───────────┴─────────────┴───────────────────┴────────────────┴────────────────┴───────────────┴────────────┘
-
 ```
 
 ## DROP
