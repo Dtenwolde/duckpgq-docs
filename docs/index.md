@@ -7,7 +7,7 @@ hide:
 <div style="text-align: center; padding: 20px;">
   <h1 style="font-size: 2.5em; font-weight: bold; margin-bottom: 10px;">DuckPGQ</h1>
   <p style="font-size: 1.2em; color: var(--md-primary-fg-color);">
-    DuckPGQ is a DuckDB extension for graph workloads that supports the SQL/PGQ standard.
+    DuckPGQ is a DuckDB community extension for graph workloads that supports the SQL/PGQ standard.
   </p>
   <p style="font-size: 1.1em; color: var(--md-default-fg-color); margin-top: 10px; font-style: italic;">
     Leveraging the power of DuckDB to bring high-performance, SQL-based graph query capabilities directly to your analytical workflows.
@@ -19,7 +19,14 @@ hide:
     <p style="font-size: 1.2em; font-weight: bold; color: var(--md-accent-fg-color); margin-bottom: 15px; text-align: center;">
       🚀 Install DuckPGQ and Load the Extension:
     </p>
-    <pre style="background-color: var(--md-code-bg-color); padding: 10px; border-radius: 8px; color: var(--md-default-fg-color); margin: 0; text-align: left;">
+    <div style="text-align: center; margin-bottom: 15px;">
+      <select id="version-dropdown" style="padding: 8px 12px; border: 1px solid var(--md-accent-fg-color); border-radius: 8px; background-color: var(--md-overlay-bg-color); color: var(--md-default-fg-color); font-size: 1em;">
+        <option value="CLI">CLI</option>
+        <option value="Python">Python</option>
+        <option value="NodeJS">NodeJS</option>
+      </select>
+    </div>
+    <pre id="install-instructions" style="background-color: var(--md-code-bg-color); padding: 10px; border-radius: 8px; color: var(--md-default-fg-color); margin: 0; text-align: left;">
 <code><span style="color: var(--md-accent-fg-color); font-weight: bold;">INSTALL</span> duckpgq <span style="color: var(--md-accent-fg-color); font-weight: bold;">FROM</span> community;
 <span style="color: var(--md-accent-fg-color); font-weight: bold;">LOAD</span> duckpgq;
 </code></pre>

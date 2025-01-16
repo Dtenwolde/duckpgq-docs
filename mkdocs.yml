@@ -83,4 +83,7 @@ extra:
 
 extra_javascript:
   - https://kit.fontawesome.com/a076d05399.js
+  - javascripts/install-environment.js
 
+extra_css:
+  - stylesheets/custom_css.css
