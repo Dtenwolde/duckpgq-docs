@@ -67,75 +67,25 @@ hide:
 </div>
 
 
-
-## Getting Started
-As of DuckDB v1.0.0, DuckPGQ is available as a community extension. From any DuckDB instance, the following two commands allow you to install and load DuckPGQ:
-
-```SQL
-install duckpgq from community;
-load duckpgq; 
-```
-
-See the official [DuckPGQ community page](https://community-extensions.duckdb.org/extensions/duckpgq.html) for more information.
-
-For older DuckDB versions, please see [Loading DuckPGQ](documentation/loading.md).
-
-## SQL/PGQ
-
-The extension implements the SQL/PGQ syntax defined by ISO in SQL:2023. PGQ introduces a visual syntax to easily express graph patterns and path-finding queries in SQL. 
-
-We will use the LDBC SNB dataset which defines Person and Person_knows_person tables. 
-
-```sql
-CREATE TABLE Person as select * from 'https://gist.githubusercontent.com/Dtenwolde/2b02aebbed3c9638a06fda8ee0088a36/raw/8c4dc551f7344b12eaff2d1438c9da08649d00ec/person-sf0.003.csv';
-CREATE TABLE Person_knows_person as select * from 'https://gist.githubusercontent.com/Dtenwolde/81c32c9002d4059c2c3073dbca155275/raw/8b440e810a48dcaa08c07086e493ec0e2ec6b3cb/person_knows_person-sf0.003.csv';
-```
-
-The first step of SQL/PGQ is to create a `PROPERTY GRAPH` as a layer on top of our data:
-```SQL
-CREATE PROPERTY GRAPH snb
-  VERTEX TABLES (
-    Person
-  )
-  EDGE TABLES (
-    Person_knows_person SOURCE KEY (Person1Id) REFERENCES Person (id)
-                        DESTINATION KEY (Person2Id) REFERENCES Person (id)
-    LABEL Knows
-);
-```
-The table `Person_knows_person` is given the label `Knows` as a shorthand for future queries.
+<h2 class="team-header">Behind DuckPGQ</h2>
 
 
-Now, we can write SQL/PGQ `MATCH` queries using the visual graph syntax:
-
-```sql
-FROM GRAPH_TABLE (snb
-  MATCH (a:Person)-[k:knows]->(b:Person)
-  COLUMNS (a.id, b.id)
-)
-LIMIT 1;
-
-FROM GRAPH_TABLE (snb 
-  MATCH p = ANY SHORTEST (a:person)-[k:knows]->{1,3}(b:Person) 
-  COLUMNS (a.id, b.id, path_length(p))
-) 
-LIMIT 1;
-```
-We use [DuckDB’s friendlier SQL](https://duckdb.org/docs/sql/dialect/friendly_sql.html) syntax and omit the `SELECT` clause.
-
-DuckPGQ also supports various graph functions such as Local Clustering Coefficient:
-
-```sql
-FROM local_clustering_coefficient(snb, person, knows);
-```
-
-Finally, once we are done with our property graph, we can drop it: 
-
-```sql
-DROP PROPERTY GRAPH snb; 
-```
-
-For more information on SQL/PGQ, please see the dedicated page explaining [SQL/PGQ](documentation/sql_pgq.md) in more detail.
+<div class="team-section">
+    <img src="assets/MK3_1748_square.JPG" alt="Daniel ten Wolde" class="team-photo">
+    <h2>Daniël ten Wolde</h2>
+    <p>Lead Developer of DuckPGQ and PhD student at CWI specializing in graph analytics and database systems.</p>
+    <div class="team-links">
+        <a href="https://github.com/Dtenwolde" target="_blank">
+            <img src="assets/github.svg" alt="GitHub" class="team-icon">
+        </a>
+        <a href="https://bsky.app/profile/dtenwolde.bsky.social" target="_blank">
+            <img src="assets/bsky.svg" alt="Bluesky" class="team-icon">
+        </a>
+        <a href="https://www.linkedin.com/in/dani%C3%ABl-ten-wolde/" target="_blank">
+            <img src="assets/linkedin.svg" alt="LinkedIn" class="team-icon">
+        </a>
+    </div>
+</div>
 
 ## WIP Disclaimer
 

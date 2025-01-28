@@ -48,3 +48,70 @@ select {
     padding: 10px 12px;
   }
 }
+
+/* Team Section Styling */
+.team-section {
+    text-align: center;
+    padding: 2rem 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-section h2 {
+    margin-top: 0; 
+    margin-bottom 10px;
+    font-size: 1.8rem; 
+}
+
+.team-photo {
+    width: 150px; /* Set a fixed width */
+    height: 150px; /* Set a fixed height, same as width */
+    border-radius: 100%; /* Ensures the image is a perfect circle */
+    object-fit: cover; /* Ensures the image content scales to fit the circular shape */
+    margin-bottom: 1rem;
+    border: 3px solid #ccc;
+}
+
+.team-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 1rem;
+}
+
+.team-links a {
+    display: inline-block;
+}
+
+.team-icon {
+    width: 32px;
+    height: 32px;
+    transition: transform 0.2s ease;
+}
+
+.team-icon:hover {
+    transform: scale(1.2);
+}
+
+/* Center the main Team header */
+.team-header {
+    text-align: center;
+    font-size: 2rem; /* Adjust size as necessary */
+    margin-top: 1rem; /* Optional: Adds space above */
+    margin-bottom: 1rem; /* Adds space below */
+}
+
+/* Center and style the inner Team header (inside team-section) */
+.team-section h2 {
+    text-align: center;
+    font-size: 1.5rem; /* Slightly smaller for differentiation */
+    margin-bottom: 0.5rem; /* Adds smaller spacing */
+}
+
+/* Make all h2 headers bold */
+h2, h3 {
+    font-weight: bold !important; /* Apply bold font style */
+}
