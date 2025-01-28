@@ -67,25 +67,21 @@ hide:
 </div>
 
 
-<h2 class="team-header">Behind DuckPGQ</h2>
 
+<h2 class="team-header">Behind DuckPGQ</h2>
 
 <div class="team-section">
     <img src="assets/MK3_1748_square.JPG" alt="Daniel ten Wolde" class="team-photo">
     <h2>Daniël ten Wolde</h2>
-    <p>Lead Developer of DuckPGQ and PhD student at CWI specializing in graph analytics and database systems.</p>
+     Lead Developer of DuckPGQ and PhD student at CWI specializing in graph analytics and database systems.
+
     <div class="team-links">
-        <a href="https://github.com/Dtenwolde" target="_blank">
-            <img src="assets/github.svg" alt="GitHub" class="team-icon">
-        </a>
-        <a href="https://bsky.app/profile/dtenwolde.bsky.social" target="_blank">
-            <img src="assets/bsky.svg" alt="Bluesky" class="team-icon">
-        </a>
-        <a href="https://www.linkedin.com/in/dani%C3%ABl-ten-wolde/" target="_blank">
-            <img src="assets/linkedin.svg" alt="LinkedIn" class="team-icon">
-        </a>
+        <a href="https://github.com/Dtenwolde" target="_blank">GitHub</a>
+        <a href="https://bsky.app/profile/dtenwolde.bsky.social" target="_blank">Bluesky</a>
+        <a href="https://www.linkedin.com/in/dani%C3%ABl-ten-wolde/" target="_blank">LinkedIn</a>
     </div>
 </div>
+
 
 ## WIP Disclaimer
 

@@ -55,45 +55,44 @@ select {
     padding: 2rem 1rem;
     max-width: 600px;
     margin: 0 auto;
-    background-color: #f9f9f9;
+    background-color: var(--md-default-bg-color); /* Dynamic background color */
+    color: var(--md-default-fg-color); /* Dynamic text color */
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .team-section h2 {
     margin-top: 0; 
-    margin-bottom 10px;
+    margin-bottom: 10px;
     font-size: 1.8rem; 
+    color: var(--md-default-fg-color); /* Dynamic text color */
 }
 
 .team-photo {
-    width: 150px; /* Set a fixed width */
-    height: 150px; /* Set a fixed height, same as width */
+    width: 150px; /* Fixed width */
+    height: 150px; /* Fixed height, same as width */
     border-radius: 100%; /* Ensures the image is a perfect circle */
     object-fit: cover; /* Ensures the image content scales to fit the circular shape */
     margin-bottom: 1rem;
-    border: 3px solid #ccc;
+    border: 3px solid var(--md-default-fg-color); /* Dynamic border color */
 }
 
 .team-links {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 1rem;
+    display: flex; /* Arrange links in a row */
+    justify-content: center; /* Center the links */
+    gap: 15px; /* Add spacing between links */
+    margin-top: 1rem; /* Space from the paragraph above */
+    font-size: 1rem; /* Optional: Increase link font size for emphasis */
 }
 
 .team-links a {
-    display: inline-block;
+    text-decoration: none; /* Remove underline from links */
+    color: var(--md-primary-fg-color); /* Use the theme's primary color */
+    transition: color 0.2s ease; /* Add a hover effect */
 }
 
-.team-icon {
-    width: 32px;
-    height: 32px;
-    transition: transform 0.2s ease;
-}
-
-.team-icon:hover {
-    transform: scale(1.2);
+.team-links a:hover {
+    color: var(--md-accent-fg-color); /* Change color on hover */
 }
 
 /* Center the main Team header */
@@ -109,9 +108,57 @@ select {
     text-align: center;
     font-size: 1.5rem; /* Slightly smaller for differentiation */
     margin-bottom: 0.5rem; /* Adds smaller spacing */
+    font-weight: bold; /* Make the team name bold */
 }
 
 /* Make all h2 headers bold */
 h2, h3 {
     font-weight: bold !important; /* Apply bold font style */
+}
+
+
+
+/* Make all h2 headers bold */
+h2, h3 {
+    font-weight: bold !important; /* Apply bold font style */
+}
+
+
+.getting-started-box {
+    background-color: var(--md-primary-bg-color); /* Use theme's primary background color */
+    color: var(--md-primary-fg-color); /* Use theme's primary foreground color */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.getting-started-box h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--md-primary-fg-color); /* Inherit theme's text color */
+}
+
+.getting-started-box p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.get-started-button {
+    display: inline-block;
+    background-color: var(--md-accent-bg-color); /* Theme's accent background */
+    color: var(--md-accent-fg-color); /* Theme's accent foreground */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.get-started-button:hover {
+    background-color: var(--md-accent-hover-bg-color); /* Subtle hover effect */
+    color: var(--md-accent-hover-fg-color); /* Subtle hover effect */
 }
