@@ -72,9 +72,11 @@ hide:
 
 === "Social Networks"
      
-
     ```sql
-    ATTACH 's3://dtenwolde/snb.duckdb';
+    ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
+
+    use snb;
+    load duckpgq;
 
     CREATE PROPERTY GRAPH snb
     VERTEX TABLES (
