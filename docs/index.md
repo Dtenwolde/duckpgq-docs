@@ -66,43 +66,46 @@ hide:
 
 </div>
 
-### Explore Queries Across Domains
+
+
+### Explore DuckPGQ Across Domains 
 
 === "Social Networks"
+     
+
     ```sql
-    -- Find the shortest path between two users
-    SELECT * 
-    FROM GRAPH_TABLE(
-        MATCH (u1:Person)-[:FOLLOWS*]->(u2:Person)
-        WHERE u1.id = 1 AND u2.id = 5
-        COLUMNS (path)
+    ATTACH 's3://dtenwolde/snb.duckdb';
+
+    CREATE PROPERTY GRAPH snb
+    VERTEX TABLES (
+      Person
+    )
+    EDGE TABLES (
+      Person_knows_person SOURCE KEY (Person1Id) REFERENCES Person (id)
+                          DESTINATION KEY (Person2Id) REFERENCES Person (id)
+                          LABEL knows
     );
     ```
 
-=== "Airline Networks"
-    ```sql
-    -- Find direct and connecting flights between two cities
-    SELECT * 
-    FROM GRAPH_TABLE(
-        MATCH (a1:Airport)-[:FLIGHT*1..2]->(a2:Airport)
-        WHERE a1.name = 'Amsterdam' AND a2.name = 'New York'
-        COLUMNS (flight_path)
-    );
-    ```
+    === "Shortest Path Query"
 
-=== "Finance"
-    ```sql
-    -- Detect suspicious transaction cycles
-    SELECT * 
-    FROM GRAPH_TABLE(
-        MATCH (a:Account)-[:TRANSFER*]->(b:Account)-[:TRANSFER]->(a)
-        COLUMNS (cycle_path)
-    );
-    ```
+          ```sql
+          -- Find the shortest path from one person to all other persons
+          FROM GRAPH_TABLE (snb
+            MATCH p = ANY SHORTEST (p1:Person WHERE p1.id = 14)-[k:Knows]->*(p2:Person)
+            COLUMNS (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
+          );
+          ```
+       
+    === "Find Mutual Friends"
 
-
-
-
+          ```sql    
+          -- Find mutual friends between two users
+          FROM GRAPH_TABLE (snb
+            MATCH (p1:Person WHERE p1.id = 16)-[k:knows]->(p2:Person)<-[k2:knows]-(p3:Person WHERE p3.id = 32)
+            COLUMNS (p2.firstName)
+          );
+          ```
 
 <h2 class="team-header">Behind DuckPGQ</h2>
 

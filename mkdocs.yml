@@ -20,7 +20,6 @@ markdown_extensions:
   - md_in_html
   - admonition
   - codehilite
-  - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true 
 
