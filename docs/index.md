@@ -66,6 +66,42 @@ hide:
 
 </div>
 
+### Explore Queries Across Domains
+
+=== "Social Networks"
+    ```sql
+    -- Find the shortest path between two users
+    SELECT * 
+    FROM GRAPH_TABLE(
+        MATCH (u1:Person)-[:FOLLOWS*]->(u2:Person)
+        WHERE u1.id = 1 AND u2.id = 5
+        COLUMNS (path)
+    );
+    ```
+
+=== "Airline Networks"
+    ```sql
+    -- Find direct and connecting flights between two cities
+    SELECT * 
+    FROM GRAPH_TABLE(
+        MATCH (a1:Airport)-[:FLIGHT*1..2]->(a2:Airport)
+        WHERE a1.name = 'Amsterdam' AND a2.name = 'New York'
+        COLUMNS (flight_path)
+    );
+    ```
+
+=== "Finance"
+    ```sql
+    -- Detect suspicious transaction cycles
+    SELECT * 
+    FROM GRAPH_TABLE(
+        MATCH (a:Account)-[:TRANSFER*]->(b:Account)-[:TRANSFER]->(a)
+        COLUMNS (cycle_path)
+    );
+    ```
+
+
+
 
 
 <h2 class="team-header">Behind DuckPGQ</h2>
