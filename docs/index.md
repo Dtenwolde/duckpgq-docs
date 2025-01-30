@@ -76,6 +76,7 @@ hide:
     ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
 
     use snb;
+    install duckpgq from community; 
     load duckpgq;
 
     CREATE PROPERTY GRAPH snb
@@ -108,6 +109,54 @@ hide:
             COLUMNS (p2.firstName)
           );
           ```
+
+=== "Airline Data"
+    
+    ```sql
+    ATTACH '';
+
+    use airline;
+    install duckpgq from community; 
+    load duckpgq; 
+
+    CREATE PROPERTY GRAPH flight_graph
+    VERTEX TABLES (
+      aircrafts_data, airports_data,
+      bookings, flights,
+      tickets, seats
+    )
+    EDGE TABLES (
+      flight_routes
+        SOURCE KEY (departure_airport) REFERENCES airports_data(airport_code)
+        DESTINATION KEY (arrival_airport) REFERENCES airports_data(airport_code),
+      ticket_flights
+        SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+        DESTINATION KEY (flight_id) REFERENCES flights(flight_id),
+      bookings_tickets
+        SOURCE KEY (book_ref) REFERENCES bookings(book_ref)
+        DESTINATION KEY (ticket_no) REFERENCES tickets(ticket_no),
+      boarding_passes 
+        SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+        DESTINATION KEY (seat_no) REFERENCES seats(seat_no)
+    );
+    ```
+
+
+    === "Shortest Route Between Airports"
+      
+      ```sql
+
+      FROM (
+        SELECT unnest(flights) AS flights 
+        FROM GRAPH_TABLE (
+          flight_graph 
+          MATCH o = ANY SHORTEST (a:airports_data WHERE a.airport_code = 'UKX')
+              -[fr:flight_routes]->*
+              (a2:airports_data WHERE a2.airport_code = 'CNN') 
+          COLUMNS (edges(o) AS flights)
+        )
+      ) JOIN flight_routes f ON f.rowid = flights;
+      ```
 
 <h2 class="team-header">Behind DuckPGQ</h2>
 
