@@ -17,6 +17,7 @@ markdown_extensions:
       base_path: ["docs"]
   - pymdownx.superfences
   - attr_list
+  - pymdownx.details
   - md_in_html
   - admonition
   - codehilite

@@ -72,23 +72,26 @@ hide:
 
 === "Social Networks"
      
-    ```sql
-    ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
+    ??? abstract "Setup"
 
-    use snb;
-    install duckpgq from community; 
-    load duckpgq;
 
-    CREATE PROPERTY GRAPH snb
-    VERTEX TABLES (
-      Person
-    )
-    EDGE TABLES (
-      Person_knows_person SOURCE KEY (Person1Id) REFERENCES Person (id)
-                          DESTINATION KEY (Person2Id) REFERENCES Person (id)
-                          LABEL knows
-    );
-    ```
+        ```sql
+        ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
+
+        use snb;
+        install duckpgq from community; 
+        load duckpgq;
+
+        CREATE PROPERTY GRAPH snb
+        VERTEX TABLES (
+          Person
+        )
+        EDGE TABLES (
+          Person_knows_person   SOURCE KEY (Person1Id) REFERENCES Person (id)
+                                DESTINATION KEY (Person2Id) REFERENCES Person (id)
+                                LABEL knows
+        );
+        ```
 
     === "Shortest Path Query"
 
@@ -112,34 +115,36 @@ hide:
 
 === "Airline Data"
     
-    ```sql
-    ATTACH '';
+    ??? abstract "Setup"
+    
+        ```sql
+        ATTACH '';
 
-    use airline;
-    install duckpgq from community; 
-    load duckpgq; 
+        use airline;
+        install duckpgq from community; 
+        load duckpgq; 
 
-    CREATE PROPERTY GRAPH flight_graph
-    VERTEX TABLES (
-      aircrafts_data, airports_data,
-      bookings, flights,
-      tickets, seats
-    )
-    EDGE TABLES (
-      flight_routes
-        SOURCE KEY (departure_airport) REFERENCES airports_data(airport_code)
-        DESTINATION KEY (arrival_airport) REFERENCES airports_data(airport_code),
-      ticket_flights
-        SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
-        DESTINATION KEY (flight_id) REFERENCES flights(flight_id),
-      bookings_tickets
-        SOURCE KEY (book_ref) REFERENCES bookings(book_ref)
-        DESTINATION KEY (ticket_no) REFERENCES tickets(ticket_no),
-      boarding_passes 
-        SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
-        DESTINATION KEY (seat_no) REFERENCES seats(seat_no)
-    );
-    ```
+        CREATE PROPERTY GRAPH flight_graph
+          VERTEX TABLES (
+          aircrafts_data, airports_data,
+          bookings, flights,
+          tickets, seats
+        )
+        EDGE TABLES (
+          flight_routes
+            SOURCE KEY (departure_airport) REFERENCES airports_data(airport_code)
+            DESTINATION KEY (arrival_airport) REFERENCES airports_data(airport_code),
+          ticket_flights
+            SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+            DESTINATION KEY (flight_id) REFERENCES flights(flight_id),
+          bookings_tickets
+            SOURCE KEY (book_ref) REFERENCES bookings(book_ref)
+            DESTINATION KEY (ticket_no) REFERENCES tickets(ticket_no),
+          boarding_passes 
+            SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+            DESTINATION KEY (seat_no) REFERENCES seats(seat_no)
+        );
+        ```
 
 
     === "Shortest Route Between Airports"
@@ -171,6 +176,8 @@ hide:
         <a href="https://www.linkedin.com/in/dani%C3%ABl-ten-wolde/" target="_blank">LinkedIn</a>
     </div>
 </div>
+
+
 
 
 ## WIP Disclaimer
