@@ -72,30 +72,37 @@ hide:
 
 === "Social Networks"
      
-    ```sql
-    ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
+    ??? abstract "Setup"
 
-    use snb;
-    load duckpgq;
 
-    CREATE PROPERTY GRAPH snb
-    VERTEX TABLES (
-      Person
-    )
-    EDGE TABLES (
-      Person_knows_person SOURCE KEY (Person1Id) REFERENCES Person (id)
-                          DESTINATION KEY (Person2Id) REFERENCES Person (id)
-                          LABEL knows
-    );
-    ```
+        ```sql
+        ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
+
+        use snb;
+        install duckpgq from community; 
+        load duckpgq;
+
+        CREATE or replace PROPERTY GRAPH snb
+        VERTEX TABLES (
+          Person, Forum
+        )
+        EDGE TABLES (
+          Person_knows_person     SOURCE KEY (Person1Id) REFERENCES Person (id)
+                                  DESTINATION KEY (Person2Id) REFERENCES Person (id)
+                                  LABEL knows,
+          Forum_hasMember_Person  SOURCE KEY (ForumId) REFERENCES Forum (id)
+                                  DESTINATION KEY (PersonId) REFERENCES Person (id)
+                                  LABEL hasMember
+        );
+        ```
 
     === "Shortest Path Query"
 
           ```sql
-          -- Find the shortest path from one person to all other persons
-          FROM GRAPH_TABLE (snb
-            MATCH p = ANY SHORTEST (p1:Person WHERE p1.id = 14)-[k:Knows]->*(p2:Person)
-            COLUMNS (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
+          -- find the shortest path from one person to all other persons
+          from graph_table (snb
+            match p = any shortest (p1:person where p1.id = 14)-[k:knows]->*(p2:person)
+            columns (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
           );
           ```
        
@@ -108,6 +115,92 @@ hide:
             COLUMNS (p2.firstName)
           );
           ```
+    
+    === "Most Popular People"
+
+          ```sql
+          -- Find the 3 most popular people 
+          FROM GRAPH_TABLE (snb
+            MATCH (follower:Person)-[follows:knows]->(person:Person)
+            COLUMNS (person.id AS personID, person.firstname, person.lastname, follower.id AS followerID)
+          )
+          SELECT personID, firstname, lastname, COUNT(followerID) AS numFollowers
+          GROUP BY ALL ORDER BY numFollowers DESC LIMIT 3;
+          ```
+    === "Forum count of the most-followed person"
+
+        ```sql
+        -- Number of forums posted on by the most followed person
+        WITH
+        mfp AS (
+          FROM GRAPH_TABLE (snb
+            MATCH (follower:Person)-[follows:knows]->(person:Person)
+            COLUMNS (person.id AS personID, person.firstname, follower.id AS followerID)
+          )
+        SELECT personID, firstname, COUNT(followerID) AS numFollowers
+        GROUP BY ALL ORDER BY numFollowers DESC LIMIT 1
+        )
+        FROM
+          mfp,
+          GRAPH_TABLE (snb
+            MATCH (person:Person)<-[fhm:hasMember]-(f:Forum)
+            COLUMNS (person.id AS personID, f.id as forumId)
+        ) addr
+        SELECT mfp.personID, mfp.firstname, mfp.numFollowers, count(addr.forumId) forumCount
+        WHERE mfp.personID = addr.personID
+        group by all;
+        ```
+
+
+=== "Airline Data"
+    
+    ??? abstract "Setup"
+    
+        ```sql
+        ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/airline-data/datasets/airline-data-small.duckdb' as airline;
+
+        use airline;
+        install duckpgq from community; 
+        load duckpgq; 
+
+        CREATE PROPERTY GRAPH flight_graph
+          VERTEX TABLES (
+            aircrafts_data, airports_data,
+            bookings, flights,
+            tickets, seats
+          )
+          EDGE TABLES (
+            route
+              SOURCE KEY (departure_airport) REFERENCES airports_data(airport_code)
+              DESTINATION KEY (arrival_airport) REFERENCES airports_data(airport_code),
+            ticket_flights
+              SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+              DESTINATION KEY (flight_id) REFERENCES flights(flight_id),
+            bookings_tickets
+              SOURCE KEY (book_ref) REFERENCES bookings(book_ref)
+              DESTINATION KEY (ticket_no) REFERENCES tickets(ticket_no),
+            boarding_passes 
+              SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+              DESTINATION KEY (seat_no) REFERENCES seats(seat_no)
+        );
+        ```
+
+
+    === "Shortest Route Between Airports"
+      
+      ```sql
+
+      FROM (
+        SELECT unnest(flights) AS flights 
+        FROM GRAPH_TABLE (
+          flight_graph 
+          MATCH o = ANY SHORTEST (a:airports_data WHERE a.airport_code = 'UKX')
+              -[fr:flight_routes]->*
+              (a2:airports_data WHERE a2.airport_code = 'CNN') 
+          COLUMNS (edges(o) AS flights)
+        )
+      ) JOIN flight_routes f ON f.rowid = flights;
+      ```
 
 <h2 class="team-header">Behind DuckPGQ</h2>
 
@@ -122,6 +215,8 @@ hide:
         <a href="https://www.linkedin.com/in/dani%C3%ABl-ten-wolde/" target="_blank">LinkedIn</a>
     </div>
 </div>
+
+
 
 
 ## WIP Disclaimer
