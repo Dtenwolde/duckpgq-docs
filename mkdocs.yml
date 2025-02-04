@@ -1,6 +1,6 @@
 site_name: DuckPGQ
 site_url: https://duckpgq.org
-site_description: DuckDB extension that adds support for SQL/PGQ and graph algorithms
+site_description: DuckDB community extension that adds support for SQL/PGQ and graph algorithms
 
 
 markdown_extensions:

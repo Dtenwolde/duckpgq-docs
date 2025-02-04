@@ -82,14 +82,17 @@ hide:
         install duckpgq from community; 
         load duckpgq;
 
-        CREATE PROPERTY GRAPH snb
+        CREATE or replace PROPERTY GRAPH snb
         VERTEX TABLES (
-          Person
+          Person, Forum
         )
         EDGE TABLES (
-          Person_knows_person   SOURCE KEY (Person1Id) REFERENCES Person (id)
-                                DESTINATION KEY (Person2Id) REFERENCES Person (id)
-                                LABEL knows
+          Person_knows_person     SOURCE KEY (Person1Id) REFERENCES Person (id)
+                                  DESTINATION KEY (Person2Id) REFERENCES Person (id)
+                                  LABEL knows,
+          Forum_hasMember_Person  SOURCE KEY (ForumId) REFERENCES Forum (id)
+                                  DESTINATION KEY (PersonId) REFERENCES Person (id)
+                                  LABEL hasMember
         );
         ```
 
@@ -112,6 +115,42 @@ hide:
             COLUMNS (p2.firstName)
           );
           ```
+    
+    === "Most Popular People"
+
+          ```sql
+          -- Find the 3 most popular people 
+          FROM GRAPH_TABLE (snb
+            MATCH (follower:Person)-[follows:knows]->(person:Person)
+            COLUMNS (person.id AS personID, person.firstname, person.lastname, follower.id AS followerID)
+          )
+          SELECT personID, firstname, lastname, COUNT(followerID) AS numFollowers
+          GROUP BY ALL ORDER BY numFollowers DESC LIMIT 3;
+          ```
+    === "Forum count of the most-followed person"
+
+        ```sql
+        -- Number of forums posted on by the most followed person
+        WITH
+        mfp AS (
+          FROM GRAPH_TABLE (snb
+            MATCH (follower:Person)-[follows:knows]->(person:Person)
+            COLUMNS (person.id AS personID, person.firstname, follower.id AS followerID)
+          )
+        SELECT personID, firstname, COUNT(followerID) AS numFollowers
+        GROUP BY ALL ORDER BY numFollowers DESC LIMIT 1
+        )
+        FROM
+          mfp,
+          GRAPH_TABLE (snb
+            MATCH (person:Person)<-[fhm:hasMember]-(f:Forum)
+            COLUMNS (person.id AS personID, f.id as forumId)
+        ) addr
+        SELECT mfp.personID, mfp.firstname, mfp.numFollowers, count(addr.forumId) forumCount
+        WHERE mfp.personID = addr.personID
+        group by all;
+        ```
+
 
 === "Airline Data"
     
