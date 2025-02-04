@@ -99,10 +99,10 @@ hide:
     === "Shortest Path Query"
 
           ```sql
-          -- Find the shortest path from one person to all other persons
-          FROM GRAPH_TABLE (snb
-            MATCH p = ANY SHORTEST (p1:Person WHERE p1.id = 14)-[k:Knows]->*(p2:Person)
-            COLUMNS (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
+          -- find the shortest path from one person to all other persons
+          from graph_table (snb
+            match p = any shortest (p1:person where p1.id = 14)-[k:knows]->*(p2:person)
+            columns (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
           );
           ```
        
@@ -157,7 +157,7 @@ hide:
     ??? abstract "Setup"
     
         ```sql
-        ATTACH '';
+        ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/airline-data/datasets/airline-data-small.duckdb' as airline;
 
         use airline;
         install duckpgq from community; 
@@ -165,23 +165,23 @@ hide:
 
         CREATE PROPERTY GRAPH flight_graph
           VERTEX TABLES (
-          aircrafts_data, airports_data,
-          bookings, flights,
-          tickets, seats
-        )
-        EDGE TABLES (
-          flight_routes
-            SOURCE KEY (departure_airport) REFERENCES airports_data(airport_code)
-            DESTINATION KEY (arrival_airport) REFERENCES airports_data(airport_code),
-          ticket_flights
-            SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
-            DESTINATION KEY (flight_id) REFERENCES flights(flight_id),
-          bookings_tickets
-            SOURCE KEY (book_ref) REFERENCES bookings(book_ref)
-            DESTINATION KEY (ticket_no) REFERENCES tickets(ticket_no),
-          boarding_passes 
-            SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
-            DESTINATION KEY (seat_no) REFERENCES seats(seat_no)
+            aircrafts_data, airports_data,
+            bookings, flights,
+            tickets, seats
+          )
+          EDGE TABLES (
+            route
+              SOURCE KEY (departure_airport) REFERENCES airports_data(airport_code)
+              DESTINATION KEY (arrival_airport) REFERENCES airports_data(airport_code),
+            ticket_flights
+              SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+              DESTINATION KEY (flight_id) REFERENCES flights(flight_id),
+            bookings_tickets
+              SOURCE KEY (book_ref) REFERENCES bookings(book_ref)
+              DESTINATION KEY (ticket_no) REFERENCES tickets(ticket_no),
+            boarding_passes 
+              SOURCE KEY (ticket_no) REFERENCES tickets(ticket_no)
+              DESTINATION KEY (seat_no) REFERENCES seats(seat_no)
         );
         ```
 
