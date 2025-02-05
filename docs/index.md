@@ -74,7 +74,6 @@ hide:
      
     ??? abstract "Setup"
 
-
         ```sql
         ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
 
@@ -105,7 +104,7 @@ hide:
             columns (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
           );
           ```
-       
+
     === "Find Mutual Friends"
 
           ```sql    
@@ -115,7 +114,7 @@ hide:
             COLUMNS (p2.firstName)
           );
           ```
-    
+
     === "Most Popular People"
 
           ```sql
@@ -185,22 +184,33 @@ hide:
         );
         ```
 
-
     === "Shortest Route Between Airports"
       
-      ```sql
+        ```sql
+        FROM (
+          SELECT unnest(flights) AS flights 
+          FROM GRAPH_TABLE (
+            flight_graph 
+            MATCH o = ANY SHORTEST (a:airports_data WHERE a.airport_code = 'UKX')
+               -[fr:flight_routes]->*
+               (a2:airports_data WHERE a2.airport_code = 'CNN') 
+            COLUMNS (edges(o) AS flights)
+          )
+        ) JOIN flight_routes f ON f.rowid = flights;
+        ```
 
-      FROM (
-        SELECT unnest(flights) AS flights 
+    
+    === "Most Expensive Seats on Average"
+
+        ```sql
         FROM GRAPH_TABLE (
           flight_graph 
-          MATCH o = ANY SHORTEST (a:airports_data WHERE a.airport_code = 'UKX')
-              -[fr:flight_routes]->*
-              (a2:airports_data WHERE a2.airport_code = 'CNN') 
-          COLUMNS (edges(o) AS flights)
+          MATCH (b:bookings)-[bt:bookings_tickets]->(t:tickets)-[bp:boarding_passes]->(s:seats)
         )
-      ) JOIN flight_routes f ON f.rowid = flights;
-      ```
+        SELECT round(avg(total_amount), 2) avg_amount, seat_no 
+        GROUP BY seat_no 
+        ORDER BY avg_amount desc;
+        ```
 
 <h2 class="team-header">Behind DuckPGQ</h2>
 
