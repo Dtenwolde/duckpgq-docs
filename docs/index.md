@@ -75,8 +75,6 @@ hide:
 
 </div>
 
-
-
 ### Explore DuckPGQ Across Domains 
 
 === "Social Networks"
@@ -204,6 +202,64 @@ hide:
         GROUP BY seat_no 
         ORDER BY avg_amount desc;
         ```
+
+=== "Financial Data"
+
+    ??? abstract "Setup"
+        ```sql
+        ATTACH ''
+        use finbench
+        INSTALL duckpgq FROM community;
+        LOAD duckpgq; 
+
+        CREATE OR REPLACE PROPERTY GRAPH finbench
+        VERTEX TABLES (
+          Account, Company, Loan, 
+          Medium, Person
+        )
+        EDGE TABLES (
+          AccountRepayLoan        SOURCE KEY (accountId) REFERENCES Account (accountId)
+                                  DESTINATION KEY (loanId) REFERENCES Loan (loanId) 
+                                  LABEL repay,
+          AccountTransferAccount  SOURCE KEY (fromId) REFERENCES Account (accountId)
+                                  DESTINATION KEY (toId) REFERENCES Account (AccountId) 
+                                  LABEL transfer,
+          AccountWithdrawAccount  SOURCE KEY (fromId) REFERENCES Account (accountId)
+                                  DESTINATION KEY (toId) REFERENCES Account (AccountId) 
+                                  LABEL withdraw,
+          CompanyApplyLoan        SOURCE KEY (companyId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (loanId) REFERENCES Loan (loanId) 
+                                  LABEL companyApply,
+          CompanyGuaranteeCompany SOURCE KEY (fromId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (toId) REFERENCES Company (companyId) 
+                                  LABEL companyGuarantee,
+          CompanyInvestCompany    SOURCE KEY (investorId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (companyId) REFERENCES Company (companyId) 
+                                  LABEL companyInvest,
+          CompanyOwnAccount       SOURCE KEY (companyId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL companyOwn,
+          LoanDepositAccount      SOURCE KEY (loanId) REFERENCES Loan (loanId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL deposit,
+          MediumSignInAccount     SOURCE KEY (mediumId) REFERENCES Medium (mediumId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL signIn,
+          PersonApplyLoan         SOURCE KEY (personId) REFERENCES Person (personId)
+                                  DESTINATION KEY (loanId) REFERENCES Loan (loanId) 
+                                  LABEL personApply,
+          PersonGuaranteePerson   SOURCE KEY (fromId) REFERENCES Person (personId)
+                                  DESTINATION KEY (toId) REFERENCES Person (personId) 
+                                  LABEL personGuarantee,
+          PersonInvestCompany     SOURCE KEY (investorId) REFERENCES Person (personId)
+                                  DESTINATION KEY (companyId) REFERENCES Company (companyId) 
+                                  LABEL personInvest,
+          PersonOwnAccount        SOURCE KEY (personId) REFERENCES Person (personId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL personOwn
+        );
+        ```
+
 
 <h2 class="team-header">Behind DuckPGQ</h2>
 
