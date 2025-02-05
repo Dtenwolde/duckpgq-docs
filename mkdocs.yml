@@ -63,6 +63,8 @@ theme:
     - navigation.tabs.sticky
     - navigation.path
     - announce.dismiss
+    - navigation.instant
+    - navigation.instant.prefetch
   icon:
     repo: fontawesome/brands/github
 repo_url: https://github.com/cwida/duckpgq-extension
