@@ -14,42 +14,51 @@ hide:
   </p>
 </div>
 
-<div style="display: flex; justify-content: center; margin: 40px 0;">
-  <div class="highlight" style="border: 2px solid var(--md-accent-fg-color); border-radius: 12px; padding: 20px; background-color: var(--md-overlay-bg-color); box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); max-width: 600px; width: 100%;">
-    <p style="font-size: 1.2em; font-weight: bold; color: var(--md-accent-fg-color); margin-bottom: 15px; text-align: center;">
-      🚀 Install DuckPGQ and Load the Extension:
-    </p>
-    <div style="text-align: center; margin-bottom: 15px;">
-      <select id="version-dropdown" style="
-        padding: 0.4em 0.6em; 
-        border: 0.08em solid var(--md-accent-fg-color); 
-        border-radius: 0.4em; 
-        background-color: var(--md-overlay-bg-color); 
-        color: var(--md-default-fg-color); 
-        font-size: 0.9rem; 
-        line-height: 1.4; 
-        max-width: 10rem; 
-        width: 100%; 
-        appearance: none;
-        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23ccc" d="M2 0L0 2h4z" /%3E%3C/svg%3E');
-        background-repeat: no-repeat;
-        background-position: right 0.6em center;
-        background-size: 0.8em;
-        padding-right: 2em;
-        box-sizing: border-box;">
-        <option value="CLI">CLI</option>
-        <option value="Python">Python</option>
-        <option value="NodeJS">NodeJS</option>        
-        <option value="R">R</option>
-        <option value="Java">Java</option>
-      </select>
-    </div>
-    <pre id="install-instructions" style="background-color: var(--md-code-bg-color); padding: 10px; border-radius: 8px; color: var(--md-default-fg-color); margin: 0; text-align: left;">
-<code><span style="color: var(--md-accent-fg-color); font-weight: bold;">INSTALL</span> duckpgq <span style="color: var(--md-accent-fg-color); font-weight: bold;">FROM</span> community;
-<span style="color: var(--md-accent-fg-color); font-weight: bold;">LOAD</span> duckpgq;
-</code></pre>
-  </div>
-</div>
+## Install and Load DuckPGQ
+
+=== "CLI"
+
+    ```sql
+    INSTALL duckpgq FROM community; 
+    LOAD duckpgq; 
+    ```
+
+=== "Python"
+
+    ```python
+    import duckdb
+    conn = duckdb.connect()
+    conn.install_extension("duckpgq", repository="community")
+    conn.load_extension("duckpgq")
+    ```
+
+=== "NodeJS"
+
+    ```js
+    import { DuckDBInstance } from '@duckdb/node-api';
+    const instance = await DuckDBInstance.create();
+    const connection = await instance.connect();
+    await connection.run("INSTALL duckpgq FROM community");
+    await connection.run("LOAD duckpgq");
+    ```
+
+=== "R"
+
+    ```r
+    library(duckdb)
+    con <- dbConnect(duckdb())
+    dbExecute(con, "INSTALL duckpgq FROM community")
+    dbExecute(con, "LOAD duckpgq")
+    ```
+
+=== "Java"
+
+    ```java
+    Connection conn = DriverManager.getConnection("jdbc:duckdb:");
+    Statement st = conn.createStatement();
+    st.execute("INSTALL duckpgq FROM community");
+    st.execute("LOAD duckpgq");
+    ```
 
 ## Key Features
 
