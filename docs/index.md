@@ -153,10 +153,10 @@ hide:
           GRAPH_TABLE (snb
             MATCH (person:Person)<-[fhm:hasMember]-(f:Forum)
             COLUMNS (person.id AS personID, f.id as forumId)
-        ) addr
-        SELECT mfp.personID, mfp.firstname, mfp.numFollowers, count(addr.forumId) forumCount
-        WHERE mfp.personID = addr.personID
-        group by all;
+        ) mem
+        SELECT mfp.personID, mfp.firstname, mfp.numFollowers, count(mem.forumId) forumCount
+        WHERE mfp.personID = mem.personID
+        GROUP BY ALL;
         ```
 
 
