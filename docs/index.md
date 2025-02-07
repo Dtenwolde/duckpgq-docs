@@ -196,6 +196,23 @@ hide:
         );
         ```
 
+    === "Shortest Route Between Airports"
+        
+        ```sql
+        FROM (
+          SELECT unnest(flights) AS flights 
+            FROM GRAPH_TABLE (
+            flight_graph 
+            MATCH o = ANY SHORTEST (a:airports_data WHERE a.airport_code = 'UKX')
+              -[fr:route]->*
+              (a2:airports_data WHERE a2.airport_code = 'CNN') 
+            COLUMNS (edges(o) AS flights)
+          )
+        ) 
+        JOIN route f 
+          ON f.rowid = flights;
+        ```
+
     === "Most Expensive Seats on Average"
 
         ```sql
