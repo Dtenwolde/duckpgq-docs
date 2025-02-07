@@ -261,6 +261,23 @@ hide:
         ```
 
 
+    === "Find blocked accounts via transfers"
+
+        ```sql
+        FROM GRAPH_TABLE (
+          finbench 
+          MATCH (src:Account where src.accountId = 16607023625929101)
+            <-[e1:transfer]-(mid:Account)
+            -[e2:transfer]->(dst:Account where dst.isBlocked = true) 
+          COLUMNS (src.accountId as src_id, dst.accountId as dst_id)
+        ) 
+        SELECT src_id, dst_id
+        WHERE src_Id <> dst_id; 
+        ```
+
+
+
+
 <h2 class="team-header">Behind DuckPGQ</h2>
 
 <div class="team-section">
