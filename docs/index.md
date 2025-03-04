@@ -75,8 +75,6 @@ hide:
 
 </div>
 
-
-
 ### Explore DuckPGQ Across Domains 
 
 === "Social Networks"
@@ -224,6 +222,93 @@ hide:
         GROUP BY seat_no 
         ORDER BY avg_amount DESC;
         ```
+
+=== "Financial Data"
+
+    ??? abstract "Setup"
+        ```sql
+        ATTACH ''
+        use finbench
+        INSTALL duckpgq FROM community;
+        LOAD duckpgq; 
+
+        CREATE OR REPLACE PROPERTY GRAPH finbench
+        VERTEX TABLES (
+          Account, Company, Loan, 
+          Medium, Person
+        )
+        EDGE TABLES (
+          AccountRepayLoan        SOURCE KEY (accountId) REFERENCES Account (accountId)
+                                  DESTINATION KEY (loanId) REFERENCES Loan (loanId) 
+                                  LABEL repay,
+          AccountTransferAccount  SOURCE KEY (fromId) REFERENCES Account (accountId)
+                                  DESTINATION KEY (toId) REFERENCES Account (AccountId) 
+                                  LABEL transfer,
+          AccountWithdrawAccount  SOURCE KEY (fromId) REFERENCES Account (accountId)
+                                  DESTINATION KEY (toId) REFERENCES Account (AccountId) 
+                                  LABEL withdraw,
+          CompanyApplyLoan        SOURCE KEY (companyId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (loanId) REFERENCES Loan (loanId) 
+                                  LABEL companyApply,
+          CompanyGuaranteeCompany SOURCE KEY (fromId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (toId) REFERENCES Company (companyId) 
+                                  LABEL companyGuarantee,
+          CompanyInvestCompany    SOURCE KEY (investorId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (companyId) REFERENCES Company (companyId) 
+                                  LABEL companyInvest,
+          CompanyOwnAccount       SOURCE KEY (companyId) REFERENCES Company (companyId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL companyOwn,
+          LoanDepositAccount      SOURCE KEY (loanId) REFERENCES Loan (loanId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL deposit,
+          MediumSignInAccount     SOURCE KEY (mediumId) REFERENCES Medium (mediumId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL signIn,
+          PersonApplyLoan         SOURCE KEY (personId) REFERENCES Person (personId)
+                                  DESTINATION KEY (loanId) REFERENCES Loan (loanId) 
+                                  LABEL personApply,
+          PersonGuaranteePerson   SOURCE KEY (fromId) REFERENCES Person (personId)
+                                  DESTINATION KEY (toId) REFERENCES Person (personId) 
+                                  LABEL personGuarantee,
+          PersonInvestCompany     SOURCE KEY (investorId) REFERENCES Person (personId)
+                                  DESTINATION KEY (companyId) REFERENCES Company (companyId) 
+                                  LABEL personInvest,
+          PersonOwnAccount        SOURCE KEY (personId) REFERENCES Person (personId)
+                                  DESTINATION KEY (accountId) REFERENCES Account (accountId) 
+                                  LABEL personOwn
+        );
+        ```
+
+
+    === "Find blocked accounts via transfers"
+
+        ```sql
+        FROM GRAPH_TABLE (
+          finbench 
+          MATCH (src:Account where src.accountId = 16607023625929101)
+            <-[e1:transfer]-(mid:Account)
+            -[e2:transfer]->(dst:Account where dst.isBlocked = true) 
+          COLUMNS (src.accountId as src_id, dst.accountId as dst_id)
+        ) 
+        SELECT src_id, dst_id
+        WHERE src_Id <> dst_id; 
+        ```
+
+
+    === "Filter high-value transfers by time"
+      
+        ```sql
+        FROM GRAPH_TABLE (
+          finbench 
+          MATCH (src:Account)-[e:Transfer]->(dst:Account) 
+          WHERE '2022-07-13 09:18:33.137' < e.createtime 
+            AND e.createtime < '2022-09-03 02:31:47.812' 
+            AND e.amount > 4829783
+          );
+        ```
+
+
 
 <h2 class="team-header">Behind DuckPGQ</h2>
 
