@@ -296,6 +296,18 @@ hide:
         ```
 
 
+    === "Filter high-value transfers by time"
+      
+        ```sql
+        FROM GRAPH_TABLE (
+          finbench 
+          MATCH (src:Account)-[e:Transfer]->(dst:Account) 
+          WHERE '2022-07-13 09:18:33.137' < e.createtime 
+            AND e.createtime < '2022-09-03 02:31:47.812' 
+            AND e.amount > 4829783
+          );
+        ```
+
 
 
 <h2 class="team-header">Behind DuckPGQ</h2>
