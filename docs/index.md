@@ -227,7 +227,7 @@ hide:
 
     ??? abstract "Setup"
         ```sql
-        ATTACH ''
+        ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/finbench.duckdb'
         use finbench
         INSTALL duckpgq FROM community;
         LOAD duckpgq; 
