@@ -106,9 +106,9 @@ hide:
 
           ```sql
           -- find the shortest path from one person to all other persons
-          from graph_table (snb
-            match p = any shortest (p1:person where p1.id = 14)-[k:knows]->*(p2:person)
-            columns (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
+          FROM GRAPH_TABLE (snb
+            MATCH p = ANY SHORTEST (p1:person WHERE p1.id = 14)-[k:knows]->*(p2:person)
+            COLUMNS (p1.id, p2.id as other_person_id, element_id(p), path_length(p))
           );
           ```
 
@@ -131,8 +131,11 @@ hide:
             COLUMNS (person.id AS personID, person.firstname, person.lastname, follower.id AS followerID)
           )
           SELECT personID, firstname, lastname, COUNT(followerID) AS numFollowers
-          GROUP BY ALL ORDER BY numFollowers DESC LIMIT 3;
+          GROUP BY ALL 
+          ORDER BY numFollowers DESC 
+          LIMIT 3;
           ```
+
     === "Forum count of the most-followed person"
 
         ```sql
@@ -151,10 +154,10 @@ hide:
           GRAPH_TABLE (snb
             MATCH (person:Person)<-[fhm:hasMember]-(f:Forum)
             COLUMNS (person.id AS personID, f.id as forumId)
-        ) addr
-        SELECT mfp.personID, mfp.firstname, mfp.numFollowers, count(addr.forumId) forumCount
-        WHERE mfp.personID = addr.personID
-        group by all;
+        ) mem
+        SELECT mfp.personID, mfp.firstname, mfp.numFollowers, count(mem.forumId) forumCount
+        WHERE mfp.personID = mem.personID
+        GROUP BY ALL;
         ```
 
 
@@ -191,6 +194,23 @@ hide:
         );
         ```
 
+    === "Shortest Route Between Airports"
+        
+        ```sql
+        FROM (
+          SELECT unnest(flights) AS flights 
+            FROM GRAPH_TABLE (
+            flight_graph 
+            MATCH o = ANY SHORTEST (a:airports_data WHERE a.airport_code = 'UKX')
+              -[fr:route]->*
+              (a2:airports_data WHERE a2.airport_code = 'CNN') 
+            COLUMNS (edges(o) AS flights)
+          )
+        ) 
+        JOIN route f 
+          ON f.rowid = flights;
+        ```
+
     === "Most Expensive Seats on Average"
 
         ```sql
@@ -200,7 +220,7 @@ hide:
         )
         SELECT round(avg(total_amount), 2) avg_amount, seat_no 
         GROUP BY seat_no 
-        ORDER BY avg_amount desc;
+        ORDER BY avg_amount DESC;
         ```
 
 === "Financial Data"
