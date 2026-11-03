@@ -10,7 +10,13 @@ DuckPGQ provides a range of graph algorithms that allow you to conveniently anal
 
 On this page, we will use the `Person` and `Person_knows_Person` tables from the **LDBC Social Network Benchmark (SNB)** dataset. These tables represent individuals and their relationships within the network.
 
+The graph functions are regular table functions, so calling them does not require the SQL/PGQ grammar. Creating the property graph does, so activate the grammar first (see [Loading DuckPGQ](loading.md)).
+
 ```sql
+-- Load DuckPGQ and activate the SQL/PGQ syntax
+LOAD duckpgq;
+SET active_grammar_extensions = ['duckpgq'];
+
 -- Create the Person table
 CREATE TABLE Person AS 
 SELECT * FROM 'https://gist.githubusercontent.com/Dtenwolde/2b02aebbed3c9638a06fda8ee0088a36/raw/8c4dc551f7344b12eaff2d1438c9da08649d00ec/person-sf0.003.csv';
@@ -40,12 +46,12 @@ The query syntax for calculating the local clustering coefficient is as follows:
 
 ```sql
 SELECT * 
-FROM local_clustering_coefficient(<property graph>, <vertex label>, <edge label>);
+FROM local_clustering_coefficient('<property graph>', '<vertex label>', '<edge label>');
 ```
 
 - `<property graph>`: The name of the property graph (e.g., `snb`).
 - `<vertex label>`: The vertex label representing the nodes (e.g., `Person`).
-- `<edge label>`: The edge label representing the relationship (e.g., `Person_knows_person`).
+- `<edge label>`: The edge label representing the relationship (e.g., `Knows`).
 
 The query returns a result with two columns:
 
@@ -55,9 +61,10 @@ The query returns a result with two columns:
 The underlying graph is treated as undirected for the purposes of this calculation.
 
 Example query:
+
 ```sql
 SELECT *
-FROM local_clustering_coefficient(snb, Person, Knows);
+FROM local_clustering_coefficient('snb', 'Person', 'Knows');
 ```
 
 ## Weakly Connected Component
@@ -68,7 +75,7 @@ The query syntax for calculating the weakly connected components is as follows:
 
 ```sql
 SELECT *
-FROM weakly_connected_component(<property graph>, <vertex label>, <edge label>);
+FROM weakly_connected_component('<property graph>', '<vertex label>', '<edge label>');
 ```
 
 - `<property graph>`: The name of the property graph (e.g., `snb`).
@@ -78,7 +85,7 @@ FROM weakly_connected_component(<property graph>, <vertex label>, <edge label>);
 The query returns a result with two columns:
 
 1. **primary key** of the vertex table (the `id` of the person in this schema)
-2. **componentId**: the minimum `rowid` of all nodes in the connected component, where nodes with the same `componentId` are part of the same weakly connected component.
+2. **componentId**: an identifier of the connected component (the `rowid` of one of its nodes). Nodes with the same `componentId` are part of the same weakly connected component.
 
 The underlying graph is treated as undirected during the calculation of weakly connected components.
 
@@ -86,7 +93,7 @@ Example query:
 
 ```sql
 SELECT *
-FROM weakly_connected_component(snb, Person, Knows);
+FROM weakly_connected_component('snb', 'Person', 'Knows');
 ```
 
 ## PageRank
@@ -97,7 +104,7 @@ The query syntax for calculating PageRank is as follows:
 
 ```sql
 SELECT *
-FROM pagerank(<property graph>, <vertex label>, <edge label>);
+FROM pagerank('<property graph>', '<vertex label>', '<edge label>');
 ```
 
 - `<property graph>`: The name of the property graph (e.g., `snb`).
@@ -107,7 +114,7 @@ FROM pagerank(<property graph>, <vertex label>, <edge label>);
 The query returns a result with two columns:
 
 1. **primary key** of the vertex table (the `id` of the person in this schema)
-2. **PageRank** for each node, representing its importance in the graph.
+2. **pagerank** for each node, representing its importance in the graph.
 
 This calculation assumes a directed edge table.
 The algorithm uses a damping factor of 0.85 and a tolerance of 1e-6.
@@ -116,5 +123,9 @@ Example query:
 
 ```sql
 SELECT *
-FROM pagerank(snb, Person, Knows);
+FROM pagerank('snb', 'Person', 'Knows');
 ```
+
+!!! note "Arguments as string literals"
+    Earlier versions of these docs passed the arguments as bare identifiers, for example `pagerank(snb, Person, Knows)`.
+    DuckDB v2.0 deprecates this and prints a warning, so pass the names as string literals instead.

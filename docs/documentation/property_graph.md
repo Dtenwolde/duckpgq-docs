@@ -2,24 +2,33 @@
 
 ## CREATE
 
-The first step in using SQL/PGQ is creating a property graph as a layer on top of your data. In DuckPGQ, property graphs are transient; they only exist as long as the connection to the database is open. 
+The first step in using SQL/PGQ is creating a property graph as a layer on top of your data. Property graphs are stored in the database, so they persist across sessions when you use a database file, and they are shared between connections. Like a view, a property graph does not copy any data: queries always read the current contents of the underlying tables.
 
-As of community version `v0.1.0` released with DuckDB `v1.1.3` property graphs are persistent and are synchronised between connections. 
+!!! warning "Property graphs over attached databases"
+    The definition of a property graph is stored in the database DuckDB was started with, even when you create the graph after `USE`-ing an attached database. A property graph defined on an attached database is therefore not saved in that database file. It is kept as long as the default database is: until the session ends for an in-memory database, or in the default database file otherwise.
 
-The tables will be divided into vertex tables and edge tables, having a primary key-foreign key relationship. An edge table should have a column defining the source node and a column describing the destination node.  
-
-To create a property graph the syntax is as follows: 
+The property graph statements on this page require the SQL/PGQ grammar to be active on the connection (see [Loading DuckPGQ](loading.md)):
 
 ```sql
-CREATE [ OR REPLACE ] PROPERTY GRAPH [ IF NOT EXISTS ] (<property graph name> 
+SET active_grammar_extensions = ['duckpgq'];
+```
+
+The tables will be divided into vertex tables and edge tables, having a primary key-foreign key relationship. An edge table should have a column defining the source node and a column describing the destination node.
+
+To create a property graph the syntax is as follows:
+
+```sql
+CREATE [ OR REPLACE ] PROPERTY GRAPH [ IF NOT EXISTS ] <property graph name>
 VERTEX TABLES (
 	<vertex table>
 [, <vertex table> ]
 )
-[ EDGE TABLES (	
-	<edge table> 
-[, <edge table ] ) ];
+[ EDGE TABLES (
+	<edge table>
+[, <edge table> ] ) ];
 ```
+
+`OR REPLACE` and `IF NOT EXISTS` cannot be combined. Without either, creating a property graph with a name that already exists results in an error.
 
 At least one `<vertex table>` must be specified to create a valid property graph. The `EDGE TABLES` are optional. For example to make a property graph over a subset of the [Social Network Benchmark dataset](https://ldbcouncil.org/benchmarks/snb/) from LDBC: 
 
@@ -63,7 +72,31 @@ Person_likes_Message  SOURCE KEY (PersonId) REFERENCES Person (id)
                       LABEL likes_Message
 ```
 
-The `LABEL` and the `PROPERTIES` are optional. 
+The `LABEL` and the `PROPERTIES` are optional.
+
+### Composite keys
+
+Source and destination keys can consist of multiple columns. List the columns in the same order on both sides of `REFERENCES`:
+
+```sql
+CREATE PROPERTY GRAPH travel
+VERTEX TABLES (Passenger, Flight)
+EDGE TABLES (
+  books SOURCE KEY (passenger_id) REFERENCES Passenger (id)
+        DESTINATION KEY (carrier, number) REFERENCES Flight (carrier, number)
+        LABEL Books
+);
+```
+
+### Edges must reference existing vertices
+
+When creating a property graph, DuckPGQ checks that the source and destination key of every edge row references an existing row in the vertex table. If not, the statement fails and the property graph is not created:
+
+```sql { .yaml .no-copy }
+Constraint Error: Incomplete edge: a row of edge table e has destination key (dst) = (99), which references no row in vertex table v (id). Every edge key must reference an existing vertex; fix or remove the row before creating the property graph.
+```
+
+This check runs only when the property graph is created. Rows that are inserted or modified afterwards are not checked again. Queries rely on the edges being complete, so keep the edge and vertex tables consistent, for example with foreign key constraints.
 
 ### Pre-defined PK-FK relations
 
@@ -120,9 +153,9 @@ CREATE TABLE Person_knows_Person(
 Attempting to create the property graph without explicitly defining the primary and foreign keys will result in an error:
 
 ```sql
-CREATE PROPERTY GRAPH (snb 
+CREATE PROPERTY GRAPH snb
 VERTEX TABLES (Person)
-EDGE TABLES (Person_knows_Person SOURCE Person DESTINATION Person); 
+EDGE TABLES (Person_knows_Person SOURCE Person DESTINATION Person);
 ```
 
 **Error**:
@@ -160,8 +193,8 @@ Consider a table called `Organisation` that can represent different types of org
 | 231 | Company | Kivalliq_Air | 1 |
 
 - **Table Name:** `Organisation`
-- **Special Column:** `typemask` - This column indicates the type of organization. It can take values such as `company` and `university`.
-- **Primary Key:** `OrganisationID` - This uniquely identifies each organization in the table.
+- **Special Column:** `typemask` - This integer column (`INTEGER` or `BIGINT`) indicates the type of organization as a bitmask: `1` for a company and `2` for a university.
+- **Primary Key:** `id` - This uniquely identifies each organization in the table.
 
 In this example, the `Organisation` table can store different types of organizations by using the `typemask` column to distinguish between them. This approach allows for flexibility and avoids the need for multiple tables to represent each type of organization.
 
@@ -174,6 +207,8 @@ Organisation LABEL Organisation IN typemask(company, university)
 ```
 
 Here, `LABEL Organisation` indicates that the table `Organisation` is being defined. The `IN typemask(company, university)` part specifies that the `typemask` column will be used to indicate whether a record is a `company` or a `university`.
+
+Each sublabel corresponds to one bit of the discriminator column, in the order they are listed: the first sublabel (`company`) matches rows where bit `1` is set, the second (`university`) matches rows where bit `2` is set, the third would match bit `4`, and so on. A row can have multiple sublabels, for example `typemask = 3` matches both `company` and `university`. The label `Organisation` itself matches all rows.
 
 By using this approach, you can efficiently manage different types of related entities within a single table, simplifying your database design and queries.
 
@@ -194,7 +229,12 @@ The specifications allow several options:
 
 - `PROPERTIES (column [, <column>])`: List the columns allowed from the original table
 - `PROPERTIES [ARE] ALL COLUMNS [EXCEPT (column [, column])]`: Allow all columns from the original table except the columns listed in the `EXCEPT` list.
+- `ALL PROPERTIES`: Allow all columns from the original table. This is the default when no properties are specified.
 - `NO PROPERTIES`: Allow no columns from the original table
+
+Referencing a column that is not a property results in an error, for example `Binder Error: Property x.email is never registered!`.
+
+A property in a `PROPERTIES` list can be given an alias (`PROPERTIES (firstName AS name)`). The alias is stored, but queries cannot use it yet; refer to the property by its column name.
 
 ### Label
 
@@ -227,19 +267,55 @@ LIMIT 1;
 └───────┴────────────────┘
 ```
 
+### Qualified names
+
+Vertex and edge tables can be qualified with a schema or an attached database, for example `VERTEX TABLES (s.Person)`. The property graph name can be qualified too: `CREATE PROPERTY GRAPH s.snb ...` creates the graph in schema `s`. Unqualified graphs are created in the `main` schema.
+
+Property graph names are unique within a database, so an unqualified name such as `snb` refers to the graph regardless of its schema. A qualified name, in `GRAPH_TABLE`, `DROP`, `DESCRIBE` or `SUMMARIZE`, has to match the catalog and schema the graph was created in.
+
+Temporary property graphs (`CREATE TEMPORARY PROPERTY GRAPH`) are not supported.
+
 ## DESCRIBE
 
-Once you have created a property graph, you can use `DESCRIBE PROPERTY GRAPH` to show information about it, such as the table name, label, and in the case of edge tables their source and destination keys. For the property graph `snb` created above, the output will be: 
+Once you have created a property graph, you can use `DESCRIBE PROPERTY GRAPH` to show information about it, such as the table name, label, and in the case of edge tables their source and destination keys. `DESC PROPERTY GRAPH` and `SHOW PROPERTY GRAPH` are equivalent. For the property graph `snb` created above, the output will be:
 
 ```sql { .yaml .no-copy }
-┌─────────────────────┬─────────┬─────────────────┬──────────────┬───────────┬─────────────┬───────────────────┬────────────────┬────────────────┬───────────────┬────────────┐
-│     table_name      │  label  │ is_vertex_table │ source_table │ source_pk │  source_fk  │ destination_table │ destination_pk │ destination_fk │ discriminator │ sub_labels │
-│       varchar       │ varchar │     boolean     │   varchar    │ varchar[] │  varchar[]  │      varchar      │   varchar[]    │   varchar[]    │    varchar    │ varchar[]  │
-├─────────────────────┼─────────┼─────────────────┼──────────────┼───────────┼─────────────┼───────────────────┼────────────────┼────────────────┼───────────────┼────────────┤
-│ Person              │ person  │ true            │              │           │             │                   │                │                │               │            │
-│ Person_knows_person │ knows   │ false           │ Person       │ [id]      │ [Person1Id] │ Person            │ [id]           │ [Person2Id]    │               │            │
-└─────────────────────┴─────────┴─────────────────┴──────────────┴───────────┴─────────────┴───────────────────┴────────────────┴────────────────┴───────────────┴────────────┘
+┌────────────────┬─────────────────────┬─────────┬─────────────────┬──────────────┬───────────┬─────────────┬───────────────────┬────────────────┬────────────────┬───────────────┬────────────┬─────────┬─────────┐
+│ property_graph │     table_name      │  label  │ is_vertex_table │ source_table │ source_pk │  source_fk  │ destination_table │ destination_pk │ destination_fk │ discriminator │ sub_labels │ catalog │ schema  │
+│    varchar     │       varchar       │ varchar │     boolean     │   varchar    │ varchar[] │  varchar[]  │      varchar      │   varchar[]    │   varchar[]    │    varchar    │ varchar[]  │ varchar │ varchar │
+├────────────────┼─────────────────────┼─────────┼─────────────────┼──────────────┼───────────┼─────────────┼───────────────────┼────────────────┼────────────────┼───────────────┼────────────┼─────────┼─────────┤
+│ snb            │ Person              │ Person  │ true            │ NULL         │ NULL      │ NULL        │ NULL              │ NULL           │ NULL           │ NULL          │ NULL       │ NULL    │         │
+│ snb            │ Person_knows_person │ Knows   │ false           │ Person       │ [id]      │ [Person1Id] │ Person            │ [id]           │ [Person2Id]    │ NULL          │ NULL       │ NULL    │         │
+└────────────────┴─────────────────────┴─────────┴─────────────────┴──────────────┴───────────┴─────────────┴───────────────────┴────────────────┴────────────────┴───────────────┴────────────┴─────────┴─────────┘
 ```
+
+The `DESCRIBE` statement can be used as a subquery, for example `FROM (DESCRIBE PROPERTY GRAPH snb) WHERE NOT is_vertex_table`. The same information is available through the table function `describe_property_graph('snb')`.
+
+## SUMMARIZE
+
+`SUMMARIZE PROPERTY GRAPH` computes statistics for every vertex and edge table in a property graph:
+
+- Vertex tables: `vertex_count`.
+- Edge tables: `edge_count`, the number of distinct sources and destinations (`unique_source_count`, `unique_destination_count`), the number of vertices without outgoing or incoming edges (`isolated_sources`, `isolated_destinations`), and the average, minimum, maximum, and quartiles of the in-degree and out-degree (`avg_in_degree`, `min_in_degree`, `max_in_degree`, `q25_in_degree`, `q50_in_degree`, `q75_in_degree`, and the same for `out_degree`).
+
+Like `DESCRIBE`, it can be used as a subquery to select specific statistics:
+
+```sql
+SELECT table_name, vertex_count, edge_count, isolated_sources, avg_out_degree, max_out_degree
+FROM (SUMMARIZE PROPERTY GRAPH snb);
+```
+
+```sql { .yaml .no-copy }
+┌─────────────────────┬──────────────┬────────────┬──────────────────┬────────────────────┬────────────────┐
+│     table_name      │ vertex_count │ edge_count │ isolated_sources │   avg_out_degree   │ max_out_degree │
+│       varchar       │    int64     │   int64    │      int64       │       double       │     int64      │
+├─────────────────────┼──────────────┼────────────┼──────────────────┼────────────────────┼────────────────┤
+│ Person              │           50 │       NULL │             NULL │               NULL │           NULL │
+│ Person_knows_person │         NULL │         83 │               22 │ 2.9642857142857144 │             13 │
+└─────────────────────┴──────────────┴────────────┴──────────────────┴────────────────────┴────────────────┘
+```
+
+The table function `summarize_property_graph('snb')` returns the same result.
 
 ## DROP
 
@@ -252,12 +328,20 @@ DROP PROPERTY GRAPH pg
 Delete a property graph with the name `pg`; do not throw an error if the property graph does not exist: 
 
 ```sql
-DROP IF EXISTS PROPERTY GRAPH pg
+DROP PROPERTY GRAPH IF EXISTS pg
 ```
 
-Adding `IF EXISTS` will not throw an error if `<property graph name>` does not exist. 
-Omitting this will result in a `BinderException` if the `<property graph name>` does not exist. 
+Adding `IF EXISTS` will not throw an error if `<property graph name>` does not exist.
+Omitting this will result in a `Binder Error` if the `<property graph name>` does not exist.
 
 ## ALTER
-To be supported in a future version
-For now, dropping and recreating the property graph is required if you wish to alter the property graph.
+To be supported in a future version.
+For now, use `CREATE OR REPLACE PROPERTY GRAPH` to change the definition of a property graph.
+
+## Listing property graphs
+
+To list the property graphs in the database, use the [`show_property_graphs`](pragma.md#show_property_graphs) pragma:
+
+```sql
+PRAGMA show_property_graphs;
+```

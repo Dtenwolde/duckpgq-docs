@@ -1,10 +1,12 @@
 # Pragmas
 
+Pragmas are regular DuckDB statements, so they work without activating the SQL/PGQ grammar.
+
 ## show_property_graphs
 
 The `show_property_graphs` pragma lists all currently registered property graphs in the DuckPGQ extension.
 
-Property graphs are registered via the `CREATE PROPERTY GRAPH` statement, and this pragma allows you to inspect which graphs are available in the current database session.
+Property graphs are registered via the [`CREATE PROPERTY GRAPH`](property_graph.md#create) statement, and this pragma allows you to inspect which graphs are available in the current database session.
 
 ### Syntax
 `PRAGMA show_property_graphs;`
@@ -12,19 +14,27 @@ Property graphs are registered via the `CREATE PROPERTY GRAPH` statement, and th
 ### Example
 
 ```sql
-CREATE PROPERTY GRAPH my_graph (
-  VERTEX TABLE people KEY (id),
-  EDGE TABLE knows SOURCE people KEY (source_id) DESTINATION people KEY (target_id)
-);
+CREATE TABLE people (id BIGINT, name VARCHAR);
+CREATE TABLE knows (source_id BIGINT, target_id BIGINT);
+
+CREATE PROPERTY GRAPH my_graph
+  VERTEX TABLES (people)
+  EDGE TABLES (
+    knows SOURCE KEY (source_id) REFERENCES people (id)
+          DESTINATION KEY (target_id) REFERENCES people (id)
+  );
 
 PRAGMA show_property_graphs;
 ```
 
 Output:
-```
-property_graph
----------------
-my_graph
+```sql { .yaml .no-copy }
+┌────────────────┐
+│ property_graph │
+│    varchar     │
+├────────────────┤
+│ my_graph       │
+└────────────────┘
 ```
 
 ### Notes
@@ -37,7 +47,7 @@ my_graph
 The `create_vertex_table` pragma in DuckPGQ generates a vertex table based on the distinct vertex identifiers found in the source and destination columns of an edge table. This is useful when your graph model is defined by an edge table, and you want to derive a vertex table automatically.
 
 ### Syntax
-`PRAGMA create_vertex_table(‘edge_table’, ‘source_column’, ‘destination_column’, ‘vertex_table_name’, ‘id_column_name’);`
+`PRAGMA create_vertex_table('edge_table', 'source_column', 'destination_column', 'vertex_table_name', 'id_column_name');`
 
 ### Parameters
 
@@ -55,11 +65,25 @@ Given an edge table like:
 
 ```sql
 CREATE TABLE edges (src INT, dst INT);
+INSERT INTO edges VALUES (1, 2), (2, 3), (3, 1), (3, 4);
 ```
 
 You can create a vertex table from it:
 ```sql
 PRAGMA create_vertex_table('edges', 'src', 'dst', 'vertices', 'id');
+FROM vertices ORDER BY id;
+```
+
+```sql { .yaml .no-copy }
+┌───────┐
+│  id   │
+│ int32 │
+├───────┤
+│     1 │
+│     2 │
+│     3 │
+│     4 │
+└───────┘
 ```
 
 This will generate and execute the following SQL under the hood:

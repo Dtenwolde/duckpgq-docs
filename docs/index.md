@@ -19,8 +19,9 @@ hide:
 === "CLI"
 
     ```sql
-    INSTALL duckpgq FROM community; 
-    LOAD duckpgq; 
+    INSTALL duckpgq FROM community;
+    LOAD duckpgq;
+    SET active_grammar_extensions = ['duckpgq'];
     ```
 
 === "Python"
@@ -30,6 +31,7 @@ hide:
     conn = duckdb.connect()
     conn.install_extension("duckpgq", repository="community")
     conn.load_extension("duckpgq")
+    conn.execute("SET active_grammar_extensions = ['duckpgq']")
     ```
 
 === "NodeJS"
@@ -40,6 +42,7 @@ hide:
     const connection = await instance.connect();
     await connection.run("INSTALL duckpgq FROM community");
     await connection.run("LOAD duckpgq");
+    await connection.run("SET active_grammar_extensions = ['duckpgq']");
     ```
 
 === "R"
@@ -49,6 +52,7 @@ hide:
     con <- dbConnect(duckdb())
     dbExecute(con, "INSTALL duckpgq FROM community")
     dbExecute(con, "LOAD duckpgq")
+    dbExecute(con, "SET active_grammar_extensions = ['duckpgq']")
     ```
 
 === "Java"
@@ -58,7 +62,14 @@ hide:
     Statement st = conn.createStatement();
     st.execute("INSTALL duckpgq FROM community");
     st.execute("LOAD duckpgq");
+    st.execute("SET active_grammar_extensions = ['duckpgq']");
     ```
+
+!!! note "Activating the SQL/PGQ syntax"
+    Starting with DuckDB v2.0, DuckPGQ adds its syntax through DuckDB's grammar extension API. After loading the
+    extension, run `SET active_grammar_extensions = ['duckpgq'];` on **every connection** that uses SQL/PGQ, as a
+    separate statement before your graph queries. On DuckDB v1.4 and v1.5, skip this line. See
+    [Loading DuckPGQ](documentation/loading.md) for details.
 
 ## Key Features
 
@@ -85,8 +96,9 @@ hide:
         ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/snb.duckdb';
 
         use snb;
-        install duckpgq from community; 
+        install duckpgq from community;
         load duckpgq;
+        set active_grammar_extensions = ['duckpgq'];
 
         CREATE or replace PROPERTY GRAPH snb
         VERTEX TABLES (
@@ -166,11 +178,12 @@ hide:
     ??? abstract "Setup"
     
         ```sql
-        ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/airline-data/datasets/airline-data-small.duckdb' as airline;
+        ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/airline-data-small.duckdb' as airline;
 
         use airline;
-        install duckpgq from community; 
-        load duckpgq; 
+        install duckpgq from community;
+        load duckpgq;
+        set active_grammar_extensions = ['duckpgq'];
 
         CREATE PROPERTY GRAPH flight_graph
           VERTEX TABLES (
@@ -230,7 +243,8 @@ hide:
         ATTACH 'https://github.com/Dtenwolde/duckpgq-docs/raw/refs/heads/main/datasets/finbench.duckdb' AS finbench;
         use finbench;
         INSTALL duckpgq FROM community;
-        LOAD duckpgq; 
+        LOAD duckpgq;
+        SET active_grammar_extensions = ['duckpgq'];
 
         CREATE OR REPLACE PROPERTY GRAPH finbench
         VERTEX TABLES (
